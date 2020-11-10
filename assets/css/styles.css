@@ -1,0 +1,13 @@
+body {
+  height: 85%;
+  background: url("../../assets/img/stationery1.jpg") no-repeat;
+  background-size: cover;
+  /*margin-top: 20;*/
+  /*margin-right: 20;*/
+  /*margin-bottom: 20;*/
+  /*margin-left: 20;*/
+  /*height: 100%;*/
+  width: 100%;
+  filter: blur(0px) brightness(59%) contrast(97%);
+}
+
