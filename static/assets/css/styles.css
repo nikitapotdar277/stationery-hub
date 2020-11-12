@@ -1,0 +1,36 @@
+body, html {
+  height: 100%;
+}
+
+.bg{
+  /* The image used */
+  background-image: url("{{ url_for('static',filename='/assets/img/stationery1.jpg')}}");
+
+  /* Full height */
+  height: 100%;
+  
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(0px) brightness(60%) contrast(97%);
+}
+.search_img{
+	
+	background: url("{{ url_for('static',filename='/assets/img/search_icon.png')}}") left no-repeat;
+	height:30px;
+    padding-left:60px;
+	padding-right: 10px;
+	width: 30%;height: 10%;
+	margin-top: 6%;
+	margin-left: 6%;
+	opacity: 1.0;
+	font-size: 30px;
+	filter: blur(0px) brightness(91%);" >
+    
+}
+
+
+
+
