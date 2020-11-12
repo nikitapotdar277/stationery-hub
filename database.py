@@ -17,8 +17,14 @@ mycursor = mydb.cursor()
 #mycursor.executemany(sql, val)
 
 #mydb.commit()
-
-
+email = "yelaiyugandhar@gmail.com"
+sql = "select * from registration where email ='" + email + "';" 
+print(sql)
+mycursor.execute(sql)
+#mydb.commit()
+print(mycursor.fetchone())
+# for i in mycursor:
+	# print(i)
 
 #print(mycursor.rowcount, "was inserted.")
 #print("1 record inserted, ID:", mycursor.lastrowid)

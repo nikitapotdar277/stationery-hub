@@ -1,5 +1,13 @@
 from flask import Flask, redirect, url_for, render_template, request
+import mysql.connector
 
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="root",
+  database="miniamazon"
+)
+mycursor = mydb.cursor()
 
 app = Flask(__name__)
 
@@ -12,12 +20,27 @@ def defaultpg(anything):
 
 @app.route('/login',methods=['GET','POST'])
 def login():
-	#email = request.form["email"]
+	
 	if request.method == "POST":
-		if request.form["email"] == "yugandharyelai@gmail.com":
+	
+	
+		email = request.form["email"]
+		branch = request.form["branch"]
+		year = request.form["year"]
+		password = request.form["psw"]
+		sql = "select * from registration where email ='" + email + "';" 
+		#print(sql)
+		mycursor.execute(sql)
+		#mydb.commit()
+		if ((mycursor.fetchone())== None) and (request.form["psw"] == request.form["psw-repeat"]):
+			sql = "insert into registration(email,branch,year,password) values(%s, %s, %s, %s);"
+			val = (email,branch,year,password)
+			#print(sql)
+			mycursor.execute(sql,val)
+			mydb.commit()
 			return f"<h1>You have successfully entered the right data</h1>"
 		else:
-			return f"<h1>User id doesnt match(Try again)</h1>"
+			return redirect("/login")
 	else:
 	
 	#print(email)
