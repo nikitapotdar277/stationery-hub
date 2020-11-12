@@ -2,7 +2,8 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="style_reg.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 
@@ -13,13 +14,32 @@
     <hr>
 
     <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Enter Email" style="color: black" name="email" id="email" required>
-
+    <input type="email" placeholder="Enter Email" style="color: black" name="email" id="email" required>
+    <br>
+     <!--<input type="text" placeholder="Select Branch" style="color: black" name="branch" id="branch" required>-->
      <label for="branch"><b>Branch</b></label>
-    <input type="text" placeholder="Enter Branch" style="color: black" name="branch" id="branch" required>
+     
+     <select class="select-css fa fa-caret-down"   placeholder="Select Branch" placeholder="Select Branch" name="branch" id="branch">
+       
+         <i class="fa fa-caret-down"></i>
+       
+       <option value="Computer">Computer</option>
+       <option value="It">IT</option>
+       <option value="Mechanical">Mechanical</option>
+       <option value="Entc">Entc</option>
+     </select>
+     <br><br>
+     
 
      <label for="year"><b>Year</b></label>
-    <input type="text" placeholder="Enter Year" style="color: black" name="year" id="year" required>
+     <select  class="select-css" name="year" id = "year">
+       <option value="FY">FY</option>
+       <option value="SY">SY</option>
+       <option value="TY">TY</option>
+       <option value=BTech>BTech</option>
+     </select>
+     <br><br>
+    <!--<input type="text" placeholder="Select Year" style="color: black" name="year" id="year" required>-->
 
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" style="color: black" name="psw" id="psw" required>
