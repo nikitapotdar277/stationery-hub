@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, session
+from flask import Flask, redirect, url_for, render_template, request, session, flash
 import mysql.connector
 from user.success import user
 
@@ -22,30 +22,45 @@ app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 def defaultpg(anything):
 	return f"<h1>This the bad url</h1>"
 
+
+
+
+
+
+
+
 @app.route('/login',methods=["GET","POST"])
 def login():
-	if request.method == "POST":
+
+	if "name" not in session:
 		
-		email = request.form["username"]
-		password = request.form["user_pass"]
-		
-		sql = "select password from registration where email= '" + email + "';"
-		
-		mycursor.execute(sql)
-		
-		db_pass = mycursor.fetchone()
-		if db_pass == None or db_pass[0] != password:
-			return "<h1>Incorrect Email/password</h1>"
-		elif db_pass[0] == password:
-			session["name"] = email[:email.find('@')]
-			return redirect("/user")#f"<h1>Login successfully {email[:email.find('@')]}</h1>"
-		
-		
-		return f"<h1>TRUE</h1>"
+		if request.method == "POST":
+			
+			email = request.form["username"]
+			password = request.form["user_pass"]
+			
+			sql = "select password from registration where email= '" + email + "';"
+			
+			mycursor.execute(sql)
+			
+			db_pass = mycursor.fetchone()
+			if db_pass == None or db_pass[0] != password:
+				flash("User Name or Password INCORRECT!!")
+				return redirect('/login')
+			elif db_pass[0] == password:
+				session["name"] = email[:email.find('@')]
+				return redirect("/user")
+			
+			
+		else:
+			
+			return render_template('sign_in.html')
 	else:
-		
-		return render_template('sign_in.html')
-	
+		return redirect('/user')
+
+
+
+
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -69,9 +84,15 @@ def register():
 			mydb.commit()
 			return f"<h1>You have successfully entered the right data</h1>"
 		else:
+			flash("Username already exists please Login")
 			return redirect("login")
 	else:
 		return render_template('register.html')
+
+
+
+
+
 
 @app.route('/')
 @app.route('/home')
