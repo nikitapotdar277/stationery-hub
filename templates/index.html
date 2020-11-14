@@ -7,9 +7,16 @@
     <title>PROJECT</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='assets/bootstrap/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/styles.css')}}">
+	<script type = "text/javascript" 
+         src = "{{ url_for('static', filename = 'index.js') }}" ></script>
 </head>
 
-<body>
+<body style="height: 92%;
+  background: url('static/assets/img/stationery1.jpg') no-repeat;
+  background-size: cover;
+	width: 100%;
+	filter: blur(0px) brightness(59%) contrast(97%);">
+  
     <div style="height: 150px;margin-top: 80px;margin-left: 100px;">
     
 	<h1 style="font-size: 70px;margin-top: 30px;padding-left: 30px;">Shop Name</h1>
@@ -26,20 +33,20 @@
 	<div style="margin-top: 4%;height: 25%;margin-left: 62%;margin-right: 5%;border-color: rgb(0,0,0);">
         
 		
-		<p style="font-size: 32px;">Wish to lend or sell your stationery?</p><a href="login"><button id="register" class="btn btn-primary" type="button" style="font-size: 25px;color: black;
+		<p style="font-size: 32px;">Wish to lend or sell your stationery?</p><a href="/register"><button id="register" class="btn btn-primary" type="button" style="font-size: 25px;color: black;
 		background: rgba(0,123,255,0);margin-right: 10px;margin-left: 55%;
-		margin-top: -24px;border-radius: 50;">Register</button></a></div>
+		margin-top: -24px;border-radius: 50;">Register</button></div></a>
     
 	
 	<div style="margin-left: 62%;">
-        <p style="font-size: 32px;">Already have an account?</p><button id ="sign-in" class="btn btn-primary" type="button" style="font-size: 25px;color: black;background: rgba(0,123,255,0);margin-right: 10px;margin-left: 49%;margin-top: -18px;border-radius: 50;">Sign in</button></div>
+        <p style="font-size: 32px;">Already have an account?</p><button id ="sign-in" class="btn btn-primary" type="button" onclick="sign_in()" style="font-size: 25px;color: black;background: rgba(0,123,255,0);margin-right: 10px;margin-left: 49%;margin-top: -18px;border-radius: 50;">Sign in</button></div>
     
 	
 	</div>
         <script
         src="{{url_for('static',filename='assets/js/jquery.min.js')}}"></script>
         <script src="{{ url_for('static',filename='assets/bootstrap/js/bootstrap.min.js')}}"></script>
-	<script src ="{{ url_for('static',filename='assets/js/script.js')}}">
+	<!--script src ="{{ url_for('static',filename='assets/js/script.js')}}"-->
 </body>
 
 </html>
