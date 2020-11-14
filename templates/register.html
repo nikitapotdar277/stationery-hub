@@ -1,0 +1,62 @@
+  
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='style_reg.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
+<form action="#" method="post"> 
+  <div class="container">
+    <h1>Register</h1>
+    <p>Please fill in this form to create an account.</p>
+    <hr>
+
+    <label for="email"><b>Email</b></label>
+    <input type="email" placeholder="Enter Email" style="color: black" name="email" id="email" required>
+    <br>
+
+     <label for="branch"><b>Branch</b></label>
+     
+     <select class="select-css fa fa-caret-down" placeholder="Select Branch" placeholder="Select Branch" name="branch" id="branch">
+       
+         <i class="fa fa-caret-down"></i>
+       
+       <option value="Computer">Computer</option>
+       <option value="It">IT</option>
+       <option value="Mechanical">Mechanical</option>
+       <option value="Entc">Entc</option>
+     </select>
+     <br><br>
+     
+
+     <label for="year"><b>Year</b></label>
+     <select  class="select-css" name="year" id = "year">
+       <option value="FE">FE</option>
+       <option value="SE">SE</option>
+       <option value="TE">TE</option>
+       <option value="BE">BTech</option>
+     </select>
+     <br><br>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" style="color: black" name="psw" id="psw" required>
+
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" style="color: black" id="psw-repeat" required>
+    <hr>
+
+    <button type="submit" class="registerbtn">Register</button>
+     <div class="container signin">
+    <p>Already have an account? <a href="/login">Sign in</a>.</p>
+  </div>
+
+  </div>
+  
+ 
+</form>
+
+</body>
+</html>
