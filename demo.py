@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, session
 import mysql.connector
 from user.success import user
 
@@ -13,6 +13,8 @@ mycursor = mydb.cursor()
 
 app = Flask(__name__)
 app.register_blueprint(user,url_prefix='/user')
+app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
+
 
 #table -> registration
 
@@ -35,6 +37,7 @@ def login():
 		if db_pass == None or db_pass[0] != password:
 			return "<h1>Incorrect Email/password</h1>"
 		elif db_pass[0] == password:
+			session["name"] = email[:email.find('@')]
 			return redirect("/user")#f"<h1>Login successfully {email[:email.find('@')]}</h1>"
 		
 		
