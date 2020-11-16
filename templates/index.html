@@ -5,9 +5,50 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>PROJECT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ url_for('static',filename='assets/bootstrap/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/styles.css')}}">
-	<script type = "text/javascript" 
+    <style>
+        body {
+  font-family: Arial;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+form.example input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+form.example button {
+  float: left;
+  width: 20%;
+  padding: 10px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none;
+  cursor: pointer;
+}
+
+form.example button:hover {
+  background: #0b7dda;
+}
+
+form.example::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+    </style>
+    <script type = "text/javascript" 
          src = "{{ url_for('static', filename = 'index.js') }}" ></script>
 </head>
 
@@ -16,19 +57,21 @@
   background-size: cover;
 	width: 100%;
 	filter: blur(0px) brightness(59%) contrast(97%);">
-  
+    <form action="/logout">
+        <button type="submit">LOG OUT</button>
+    </form>
     <div style="height: 150px;margin-top: 80px;margin-left: 100px;">
     
 	<h1 style="font-size: 70px;margin-top: 30px;padding-left: 30px;">Shop Name</h1>
     
 	</div>
 	
-	
-    <input type="search" id ="search_img" style="background: url('static/assets/img/search_icon.png') left no-repeat; height:30px;
+	<form class="example" action="/search" method="POST" style="height:30px;
     padding-left:60px; padding-right: 10px; width: 30%;height: 10%;margin-top: 6%;
-	margin-left: 6%;opacity: 1.0;font-size: 30px;filter: blur(0px) brightness(91%);" >
-    
-	
+	margin-left: 6%;opacity: 1.0;font-size: 30px;">
+        <input type="text" name="search_item" placeholder="Search..">
+        <button type="submit" name="search"><i class="fa fa-search"></i></button>
+      </form>
 	
 	<div style="margin-top: 4%;height: 25%;margin-left: 62%;margin-right: 5%;border-color: rgb(0,0,0);">
         

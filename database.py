@@ -1,12 +1,12 @@
-# import mysql.connector
+import mysql.connector
 
-# mydb = mysql.connector.connect(
-#   host="localhost",
-#   user="root",
-#   password="root",
-#   database="miniamazon"
-# )
-# mycursor = mydb.cursor()
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="",
+  database="miniamazon"
+)
+mycursor = mydb.cursor()
 
 
 #mycursor.execute("create table customers(name varchar(30), address varchar(50))")
@@ -20,9 +20,9 @@
 email = "yelaiyugandhar@gmail.com"
 sql = "select * from registration where email ='" + email + "';" 
 print(sql)
-# mycursor.execute(sql)
+mycursor.execute(sql)
 #mydb.commit()
-# print(mycursor.fetchone())
+print(mycursor.fetchone())
 # for i in mycursor:
 	# print(i)
 
