@@ -54,7 +54,7 @@ def login():
 			
 		else:
 			
-			return render_template('sign_in.html')
+			return render_template('login_pg.html')
 	else:
 		return redirect('/user')
 
@@ -98,6 +98,8 @@ def register():
 @app.route('/home')
 def home():
 	return render_template("index.html")
+	
+	
 	
 
 if __name__ == "__main__":
