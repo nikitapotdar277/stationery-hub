@@ -137,9 +137,9 @@ def sell1():
 	item_name = request.form["item"]
 	price = request.form["price"]
 	item_type = "sell"
-	print('hora ruko')
+	print(email,price,item_type,item_name)
 	sql = "insert into items(email,item_name,price,item_type) values(%s, %s, %s, %s);"
-	val = (email,item_name,price,item_type)
+	val = (email,item_name,int(price),item_type)
 	mycursor.execute(sql, val)
 	mydb.commit()
 	return ('/success')
