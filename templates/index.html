@@ -6,90 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>PROJECT</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{{ url_for('static',filename='assets/bootstrap/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/styles.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap/css/bootstrap.min.css')}}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static',filename='styles.css')}}"> -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">  
     <style>
-        body {
-  font-family: Arial;
-}
+      input {
+        background-color: transparent;
+        border-radius: 20px; 
+        width: 400px; 
+        height: 50px; 
+        overflow: hidden;
+      }
+      input :focus {
+        border: 0;
+        border-color: #fff6f6;
+      }
+      input :active {
+        border: 0;
+        border-color: #fff6f6;
+      }
+      input:focus-visible{
+        border: 0;
+        border-color: #fff6f6;
+      }
 
-* {
-  box-sizing: border-box;
-}
-
-form.example input[type=text] {
-  padding: 10px;
-  font-size: 17px;
-  border: 1px solid grey;
-  float: left;
-  width: 80%;
-  background: #f1f1f1;
-}
-
-form.example button {
-  float: left;
-  width: 20%;
-  padding: 10px;
-  background: #2196F3;
-  color: white;
-  font-size: 17px;
-  border: 1px solid grey;
-  border-left: none;
-  cursor: pointer;
-}
-
-form.example button:hover {
-  background: #0b7dda;
-}
-
-form.example::after {
-  content: "";
-  clear: both;
-  display: table;
-}
     </style>
-    <script type = "text/javascript" 
-         src = "{{ url_for('static', filename = 'index.js') }}" ></script>
 </head>
 
-<body style="height: 92%;
-  background: url('static/assets/img/stationery1.jpg') no-repeat;
-  background-size: cover;
-	width: 100%;
-	filter: blur(0px) brightness(59%) contrast(97%);">
-    <form action="/logout">
-        <button type="submit">LOG OUT</button>
-    </form>
-    <div style="height: 150px;margin-top: 80px;margin-left: 100px;">
-    
-	<h1 style="font-size: 70px;margin-top: 30px;padding-left: 30px;">Shop Name</h1>
-    
-	</div>
-	
-	<form class="example" action="/search" method="POST" style="height:30px;
-    padding-left:60px; padding-right: 10px; width: 30%;height: 10%;margin-top: 6%;
-	margin-left: 6%;opacity: 1.0;font-size: 30px;">
-        <input type="text" name="search_item" placeholder="Search..">
-        <button type="submit" name="search"><i class="fa fa-search"></i></button>
-      </form>
-	
-	<div style="margin-top: 4%;height: 25%;margin-left: 62%;margin-right: 5%;border-color: rgb(0,0,0);">
-        
-		
-		<p style="font-size: 32px;">Wish to lend or sell your stationery?</p><a href="/register"><button id="register" class="btn btn-primary" type="button" style="font-size: 25px;color: black;
-		background: rgba(0,123,255,0);margin-right: 10px;margin-left: 55%;
-		margin-top: -24px;border-radius: 50;">Register</button></div></a>
-    
-	
-	<div style="margin-left: 62%;">
-        <p style="font-size: 32px;">Already have an account?</p><button id ="sign-in" class="btn btn-primary" type="button" onclick="sign_in()" style="font-size: 25px;color: black;background: rgba(0,123,255,0);margin-right: 10px;margin-left: 49%;margin-top: -18px;border-radius: 50;">Sign in</button></div>
-    
-	
-	</div>
-        <script
-        src="{{url_for('static',filename='assets/js/jquery.min.js')}}"></script>
-        <script src="{{ url_for('static',filename='assets/bootstrap/js/bootstrap.min.js')}}"></script>
-	<!--script src ="{{ url_for('static',filename='assets/js/script.js')}}"-->
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" padding-left: 25%; color: #e3f2fd; font-family: 'Source Sans Pro', sans-serif;">
+    <a class="navbar-brand" href="#" style="font-family: 'Modak'; font-size:3em;">StationeryHub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <div style="width: 50%;"></div>
+      <span class="navbar-text"> 
+        <ul class="navbar-nav mr-auto" style="font-size: 2em;">
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('login')}}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('register')}}">Register</a>
+          </li>
+        </ul>
+      </span>
+    </div>
+  </nav>
+
+  <div class="container" style="padding: 3em;">
+    <center>
+      <img src="static/cover_image.png" alt="stationery" height="300px" width="50%">
+      <div style="margin: 2em;">
+        <form action="/search" method="POST" >
+        <input type="text" name="search_item" placeholder="Search...">
+          <button type="submit" name="search" style="border: 0; background-color: transparent; height: 50px;"><i class="fa fa-search"></i></button>
+        </form>
+      </div>
+    </center>
+  </div>
 </body>
 
 </html>

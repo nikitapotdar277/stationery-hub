@@ -57,7 +57,7 @@ def login():
 				return redirect("/user")
 
 		else:
-			return render_template('sign_in.html')
+			return render_template('login_pg.html')
 	else:
 		return redirect('/user')
 
