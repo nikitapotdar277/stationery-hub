@@ -6,51 +6,62 @@
     <title>Document</title>
     <style>
         table{
+            border-radius: 10px;
             border: 1px black solid;
         }
+        td {
+            padding: 10px;
+        }
         thead, th {
+            height: 50px;
             border-bottom: 1px black solid;
         }
         tr.header
         {
             cursor:pointer;
         }
-        /* tr, td
-        {
-            border: 1px solid black;
-        } */
+        .newbutton {
+            border-radius: 5px;
+            background-color: transparent;
+            height: 35px;
+            width: 70px;
+        }
+
     </style>
 </head>
-<body>
-
-    <center>
-        <table>
-            <thead>
-                <tr>
-                    <th>email</th>
-                    <th>item_name</th>
-                    <th>price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in db_search %}
-                    <tr class="header">
-                        <td>{{row[1]}}</td>
-                        <td>{{row[2]}}</td>
-                        <td>{{row[3]}}</td>
-                    </tr> 
-                    <tr class="hide">
-                        <td>
-                            <a href="{{url_for('order', seller_email = row[1], item_name = row[2], item_type = row[4])}}"><button>Order</button></a>
-                            
-                        </td>
+<body style="background-image: linear-gradient(to bottom, #2193b0, #6dd5ed); height: 100%; background-repeat: no-repeat; background-attachment: fixed;">
+    <div class="container" >
+        <center>
+            <!-- <div></div> -->
+            <table style="background-color: aliceblue; margin: 20px;">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Item Name</th>
+                        <th>Price</th>
                     </tr>
-                {% endfor %}
-                
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for row in db_search %}
+                        <tr class="header">
+                            <td>{{row[1]}}</td>
+                            <td>{{row[2]}}</td>
+                            <td>{{row[3]}}</td>
+                        </tr> 
+                        <tr class="hide">
+                            <td align="center">
+                                <a href="{{url_for('order', seller_email = row[1], item_name = row[2], item_type = row[4])}}"><button class="newbutton">Order</button></a>
+                                
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </center>
+    </div>
+        
 
-    </center>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>

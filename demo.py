@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
-  password="root",
+  password="",
   database="miniamazon"
 )
 mycursor = mydb.cursor()
