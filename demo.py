@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 import mysql.connector
 from user.success import user
-from flask_login import logout_user
+from flask_mail import Mail, Message
 
 
 mydb = mysql.connector.connect(
@@ -13,6 +13,16 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 app = Flask(__name__)
+mail = Mail(app)
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'stationeryhub123@gmail.com'
+app.config['MAIL_PASSWORD'] = 'snydbmsshub'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app) 
+
 app.register_blueprint(user,url_prefix='/user')
 app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 
@@ -60,8 +70,8 @@ def logout():
 @app.route('/search', methods=['POST'])
 def search():
 	search_item = request.form["search_item"]
-	sql = "select * from items where item_name = '" + search_item + "';"
-	mycursor.execute(sql)
+	sql = "select * from items where item_name = %s and sold = %s;"
+	mycursor.execute(sql, (search_item, False))
 	db_search = mycursor.fetchall()
 	# for i in db_search:
 	# 	for j in len(i):
@@ -105,7 +115,7 @@ def lend():
 
 @app.route('/lenditems',methods=['POST'])
 def lenditems():
-	email = session["name"]
+	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
 	price = 0.00
 	item_type = "lend"
@@ -121,7 +131,7 @@ def sell():
 
 @app.route('/sell1',methods=['POST'])
 def sell1():
-	email = session["name"]
+	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
 	price = request.form["price"]
 	item_type = "sell"
@@ -132,6 +142,37 @@ def sell1():
 	mydb.commit()
 	return ('/success')
 
+@app.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
+def order(seller_email, item_name, item_type):
+	sql1 = "select * from items where email = %s and item_name = %s and item_type = %s;"
+	mycursor.execute(sql1, (seller_email, item_name, item_type))
+	db_val = mycursor.fetchone()
+
+	# img = img
+	sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
+	val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
+	mycursor.execute(sql2, val)
+	mydb.commit()
+
+	sql3 = "update items set sold = 1 where email = %s and item_name = %s and item_type = %s;"
+	mycursor.execute(sql3, (seller_email, item_name, item_type))
+	mydb.commit()
+
+	seller_msg = Message(
+		'Hello',
+		sender='stationeryhub123@gmail.com',
+		recipients=[seller_email]
+	)
+	seller_msg.body = 'Hello! the user ' + session["name"] + '@gmail.com needs ' + item_name + '. They\'ll contact you soon. Thank you!'
+	mail.send(seller_msg)
+	buyer_msg = Message(
+		'Hello',
+		sender='stationeryhub123@gmail.com',
+		recipients=[session["name"] + '@gmail.com']
+	)
+	buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
+	mail.send(buyer_msg)
+	return('Ordered! Please check your mail')
 
 @app.route('/')
 @app.route('/home')

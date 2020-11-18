@@ -1,0 +1,34 @@
+  
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='style_reg.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
+<form action="/sell1" method="post"> 
+  <div class="container">
+    <h1>Sell Stationery</h1>
+    <hr>
+
+    <label for="item"><b>Item</b></label>
+    <input type="text" placeholder="Enter Item to Sell" style="color: black" name="item" id="item" required>
+    <br>
+
+     <label for="price"><b>Price</b></label>
+     <input type="text" placeholder="Enter Price" style="color: black" name="price" id="price" required>
+     <br><br>
+
+     <form>
+        <input type="file" id="myFile" name="filename">
+      </form>
+
+    <button type="submit" class="registerbtn">Submit</button>
+
+  </div> 
+</form>
+
+</body>
+</html>
