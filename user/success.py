@@ -8,3 +8,5 @@ def success():
 		return "<h1><center>please login</center></h1>"
 	else:
 		return render_template('user.html',name = session['name'].lower())
+
+# @user.route('')

@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
-  password="",
+  password="root",
   database="miniamazon"
 )
 mycursor = mydb.cursor()
@@ -44,7 +44,7 @@ def login():
 			email = request.form["username"]
 			password = request.form["user_pass"]
 			
-			sql = "select password from registration where email= '" + email + "';"
+			sql = "select password from registration where email= '" + email +"';"
 			
 			mycursor.execute(sql)
 			
