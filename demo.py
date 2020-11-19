@@ -78,9 +78,6 @@ def search():
 	sql = "select * from items where item_name = %s and sold = %s;"
 	mycursor.execute(sql, (search_item, False))
 	db_search = mycursor.fetchall()
-	# for i in db_search:
-	# 	for j in len(i):
-	# 		email, item_name, price, item_type = db_search[j]
 	return render_template('table.html', db_search = db_search)
 
 @app.route('/table')
@@ -124,15 +121,20 @@ def register():
 		return render_template('register.html')
 
 
-@app.route('/lend',methods=['POST'])
+@app.route('/rent',methods=['POST'])
 def lend():
-	return render_template("lend.html")
+	return render_template("rent.html")
 
-@app.route('/lenditems',methods=['POST'])
+@app.route('/rentitems',methods=['POST'])
 def lenditems():
 	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
-	price = 0.00
+	try:
+		price = int(request.form["price"])
+	except:
+		flash("Price must be a number!!")
+		return redirect('/rent')
+		
 	item_type = "lend"
 	sql = "insert into items(email,item_name,price,item_type) values(%s, %s, %s, %s);"
 	val = (email,item_name,price,item_type)
@@ -148,11 +150,15 @@ def sell():
 def sell1():
 	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
-	price = request.form["price"]
+	try:
+		price = int(request.form["price"])
+	except:
+		flash("Price must be a number!!")
+		return redirect('/sell')
 	item_type = "sell"
 	print(email,price,item_type,item_name)
 	sql = "insert into items(email,item_name,price,item_type) values(%s, %s, %s, %s);"
-	val = (email,item_name,int(price),item_type)
+	val = (email,item_name,price,item_type)
 	mycursor.execute(sql, val)
 	mydb.commit()
 	return ('/success')
