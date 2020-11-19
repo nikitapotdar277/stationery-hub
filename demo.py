@@ -31,7 +31,7 @@ app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 
 @app.route('/<anything>')
 def defaultpg(anything):
-	return f"<h1>This the bad url</h1>"
+	return render_template('notfound.html')
 
 
 @app.route('/login',methods=["GET","POST"])
@@ -44,10 +44,12 @@ def login():
 			email = request.form["username"]
 			password = request.form["user_pass"]
 			
-			sql = "select password from registration where email= '" + email + "';"
+			sql = f"""select password from registration where email = '{email}';"""
 			
-			mycursor.execute(sql)
-			
+			try:
+				mycursor.execute(sql)
+			except:
+				redirect('/somethingwentwrong')
 			db_pass = mycursor.fetchone()
 			if db_pass == None or db_pass[0] != password:
 				flash("User Name or Password INCORRECT!!")
@@ -93,11 +95,21 @@ def register():
 		branch = request.form["branch"]
 		year = request.form["year"]
 		password = request.form["psw"]
-		sql = "select * from registration where email ='" + email + "';" 
-		#print(sql)
-		mycursor.execute(sql)
+		sql = f"""select * from registration where email = '{email}' """
+		print(sql)
+		try:
+			mycursor.execute(sql)
+		except:
+			redirect('/notfound')
+			
 		# mydb.commit()
-		if ((mycursor.fetchone())== None) and (request.form["psw"] == request.form["psw-repeat"]):
+		flag = 1
+		if (request.form["psw"] != request.form["psw-repeat"]) or (len(password)< 8):
+			flag = 0
+			flash("Password should be atleast 8 characters long and both should match")
+			return redirect('/register')
+			
+		if ((mycursor.fetchone())== None) and (request.form["psw"] == request.form["psw-repeat"] and flag):
 			sql = "insert into registration(email,branch,year,password) values(%s, %s, %s, %s);"
 			val = (email,branch,year,password)
 			#print(sql)
@@ -180,6 +192,8 @@ def order(seller_email, item_name, item_type):
 @app.route('/home')
 def home():
 	return render_template("index.html")
+	
+	
 	
 	
 	
