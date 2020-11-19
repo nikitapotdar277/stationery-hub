@@ -79,9 +79,9 @@ hr.solid {
 /* Fading animation */
 .fade {
   -webkit-animation-name: fade;
-  -webkit-animation-duration: 5s;
+  -webkit-animation-duration: 1s;
   animation-name: fade;
-  animation-duration: 5s;
+  animation-duration: 1s;
 }
 
 @-webkit-keyframes fade {

@@ -183,8 +183,9 @@ def home():
 
 img_name,prices,review,history=[],[],[],[]
 
-@app.route('/trial')
+@app.route('/user/main')
 def trial():
+	
 	img_name = ['static/user_pg/image_dy/'+i for i in os.listdir(r"./static/user_pg/image_dy/")]
 	for i in range(6):
 		prices.append((i+1)*100)
