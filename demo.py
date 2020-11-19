@@ -2,12 +2,13 @@ from flask import Flask, redirect, url_for, render_template, request, session, f
 import mysql.connector
 from user.success import user
 from flask_mail import Mail, Message
+import sys
 
 
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
-  password="",
+  password=sys.argv[1],
   database="miniamazon"
 )
 mycursor = mydb.cursor()
