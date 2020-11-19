@@ -178,9 +178,25 @@ def order(seller_email, item_name, item_type):
 @app.route('/home')
 def home():
 	return render_template("index.html")
+
+
+img_name,prices,review=[],[],[]
+
+@app.route('/trial')
+def trial():
+	for i in (1,6):
+		img_name.append('static/'+"img (" + str(i) + ").jpg")
+		prices.append(i*100)
+		review.append(i*.4)
+	return render_template("user1.html",img_name=img_name,prices=prices,review=review)
+
+	
 	
 
 if __name__ == "__main__":
 	TEMPLATES_AUTO_RELOAD = True
 	app.debug = True
 	app.run()
+
+
+	
