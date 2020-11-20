@@ -8,7 +8,7 @@
 </head>
 <body>
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
-<form action="/sell1" method="post"> 
+<form action="/user/sell1" method="post" enctype="multipart/form-data"> 
   <div class="container">
     <h1>Sell Stationery</h1>
     <hr>
@@ -22,7 +22,7 @@
      <br><br>
 
      <form>
-        <input type="file" id="myFile" name="filename">
+        <input type="file" id="myFile" name="sellitem">
       </form>
 
     <button type="submit" class="registerbtn">Submit</button>

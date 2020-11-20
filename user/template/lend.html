@@ -8,17 +8,21 @@
 </head>
 <body>
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
-<form action="/lenditems" method="post"> 
+<form action="/user/lenditems" method="post" enctype="multipart/form-data"> 
   <div class="container">
-    <h1>Sell Stationery</h1>
+    <h1>Rent Stationery</h1>
     <hr>
 
     <label for="item"><b>Item</b></label>
     <input type="text" placeholder="Enter Item to Rent" style="color: black" name="item" id="item" required>
     <br>
 
+    <label for="price"><b>Price</b></label>
+     <input type="text" placeholder="Enter Price" style="color: black" name="price" id="price" required>
+     <br><br>
+
      <form>
-        <input type="file" id="myFile" name="filename">
+        <input type="file" id="myFile" name="rentitem">
       </form>
 
     <button type="submit" class="registerbtn">Submit</button>

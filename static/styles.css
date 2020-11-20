@@ -1,51 +1,63 @@
-body {
-  height: 92%;
-  background: url("../assets/img/stationery1.jpg") no-repeat;
-  background-size: cover;
-  /*margin-top: 20;*/
-  /*margin-right: 20;*/
-  /*margin-bottom: 20;*/
-  /*margin-left: 20;*/
-  /*height: 100%;*/
-  width: 100%;
-  filter: blur(0px) brightness(59%) contrast(97%);
+@font-face {
+  font-family: Source Sans Pro;
+  src: url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
 }
 
-body {
-  font-family: Arial;
+@font-face {
+  font-family: Modak;
+  src: url("https://fonts.googleapis.com/css2?family=Modak&display=swap");
 }
 
-* {
-  box-sizing: border-box;
+input {
+  background-color: transparent;
+  border-radius: 20px; 
+  width: 48%; 
+  height: 50px; 
+  overflow: hidden;
+}
+input :focus {
+  border: 0;
+  border-color: #fff6f6;
+}
+input :active {
+  border: 0;
+  border-color: #fff6f6;
+}
+input:focus-visible{
+  border: 0;
+  border-color: #fff6f6;
+}
+.buttonicon {
+  border: 0; 
+  background-color: transparent; 
+  height: 7%;
+}
+.navibar {
+  padding-left: 5%;
+  padding-bottom: 5px; 
+  background: #92b9d4; 
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
-form.example input[type=text] {
-  padding: 10px;
-  font-size: 17px;
-  border: 1px solid grey;
-  float: left;
-  width: 80%;
-  background: #f1f1f1;
+@media(max-width: 767px) {
+  img {
+    height: 50%;
+    width: 80%;
+  }
+  /* .buttonicon {
+    width: 75%;
+  } */
+  input {
+    width: 78%;
+  }
 }
-
-form.example button {
-  float: left;
-  width: 20%;
-  padding: 10px;
-  background: #2196F3;
-  color: white;
-  font-size: 17px;
-  border: 1px solid grey;
-  border-left: none;
-  cursor: pointer;
-}
-
-form.example button:hover {
-  background: #0b7dda;
-}
-
-form.example::after {
-  content: "";
-  clear: both;
-  display: table;
+@media screen and (min-width: 767px) and ( max-width: 993px){
+  img {
+    height: 50%;
+    width: 65%;
+  }
+  input {
+    width: 63%;
+  }
+  
 }
