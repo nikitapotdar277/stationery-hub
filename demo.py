@@ -30,8 +30,9 @@ app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 
 #table -> registration
 
-@app.route('/<anything>')
+@app.errorhandler(404)
 def defaultpg(anything):
+	app.logger.info(f"Page not found :{request.url}")
 	return render_template('notfound.html')
 
 
