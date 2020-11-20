@@ -1,0 +1,63 @@
+@font-face {
+  font-family: Source Sans Pro;
+  src: url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
+}
+
+@font-face {
+  font-family: Modak;
+  src: url("https://fonts.googleapis.com/css2?family=Modak&display=swap");
+}
+
+input {
+  background-color: transparent;
+  border-radius: 20px; 
+  width: 48%; 
+  height: 50px; 
+  overflow: hidden;
+}
+input :focus {
+  border: 0;
+  border-color: #fff6f6;
+}
+input :active {
+  border: 0;
+  border-color: #fff6f6;
+}
+input:focus-visible{
+  border: 0;
+  border-color: #fff6f6;
+}
+.buttonicon {
+  border: 0; 
+  background-color: transparent; 
+  height: 7%;
+}
+.navibar {
+  padding-left: 5%;
+  padding-bottom: 5px; 
+  background: #92b9d4; 
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+@media(max-width: 767px) {
+  img {
+    height: 50%;
+    width: 80%;
+  }
+  /* .buttonicon {
+    width: 75%;
+  } */
+  input {
+    width: 78%;
+  }
+}
+@media screen and (min-width: 767px) and ( max-width: 993px){
+  img {
+    height: 50%;
+    width: 65%;
+  }
+  input {
+    width: 63%;
+  }
+  
+}
