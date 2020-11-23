@@ -1,12 +1,11 @@
-from flask import Blueprint, render_template, Flask, session
+from flask import Blueprint, render_template, Flask, session, flash, redirect
 
 user = Blueprint("success",__name__,static_folder="static", template_folder="template")
 
 @user.route('/')
 def success():
 	if "name" not in session:
-		return "<h1><center>please login</center></h1>"
+		flash("Please Login to continue","info")
+		return redirect('/login')
 	else:
 		return render_template('user.html',name = session['name'].lower())
-
-# @user.route('')
