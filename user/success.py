@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from flask import Blueprint,Flask, redirect, url_for, render_template, request, session, flash
 import mysql.connector
 from flask_mail import Mail, Message
@@ -28,6 +29,9 @@ mail = Mail(app)
 
 app.config['UPLOAD_FOLDER'] = 'static/image/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+=======
+from flask import Blueprint, render_template, Flask, session, flash, redirect
+>>>>>>> aa6d44402f93b032c41c75fcd2248629790513ee
 
 user = Blueprint("success",__name__,static_folder="static", template_folder="template")
 
@@ -38,7 +42,8 @@ def allowed_file(filename):
 @user.route('/')
 def success():
 	if "name" not in session:
-		return "<h1><center>please login</center></h1>"
+		flash("Please Login to continue","info")
+		return redirect('/login')
 	else:
 		return render_template('user.html', name = session['name'].lower())
 
