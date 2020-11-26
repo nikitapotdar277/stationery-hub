@@ -43,16 +43,16 @@ def success():
 	else:
 		return render_template('user.html', name = session['name'].lower())
 
-@user.route('/lend',methods=['POST'])
-def lend():
-	return render_template("lend.html")
+@user.route('/rent',methods=['POST'])
+def rent():
+	return render_template("rent.html")
 
-@user.route('/lenditems',methods=['POST'])
-def lenditems():
+@user.route('/rentitems',methods=['POST'])
+def rentitems():
 	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
 	price = request.form["price"]
-	item_type = "lend"
+	item_type = "rent"
 	file = request.files['rentitem']
 	
 	if file and allowed_file(file.filename):
