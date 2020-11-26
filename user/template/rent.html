@@ -5,10 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='style_reg.css')}}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
+    {% block content %}
+      {% with message = get_flashed_messages() %}
+        {% if message %}
+          {% for msg in message %}
+          <div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+            <p><center>{{msg}}</p></center>
+  
+</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    {% endblock%}
 </head>
 <body>
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
-<form action="/user/lenditems" method="post" enctype="multipart/form-data"> 
+<form action="/user/rentitems" method="post" enctype="multipart/form-data"> 
   <div class="container">
     <h1>Rent Stationery</h1>
     <hr>
