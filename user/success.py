@@ -101,7 +101,6 @@ def order(seller_email, item_name, item_type):
 	mycursor.execute(sql1, (seller_email, item_name, item_type))
 	db_val = mycursor.fetchone()
 
-	# img = img
 	sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
 	val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
 	mycursor.execute(sql2, val)
