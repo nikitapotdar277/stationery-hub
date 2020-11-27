@@ -187,7 +187,8 @@ img_name,prices,review,history=[],[],[],[]
 def trial():
 	
 	img_name = ['static/user_pg/image_dy/'+i for i in os.listdir(r"./static/user_pg/image_dy/")]
-	for i in range(6):
+	print(img_name)
+	for i in range(len(img_name)):
 		prices.append((i+1)*100)
 		review.append((i+1))
 	return render_template("user1.html",img_name=img_name,prices=prices,review=review,slider=img_name,history=img_name)
