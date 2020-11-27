@@ -34,7 +34,7 @@ CREATE TABLE `items` (
   `item_name` varchar(50) NOT NULL,
   `price` float NOT NULL,
   `item_type` varchar(10) NOT NULL,
-  `img` varchar(50) NOT NULL,
+  `img` blob NOT NULL,
   `sold` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -108,7 +108,7 @@ INSERT INTO `registration` (`email`, `branch`, `year`, `password`, `user_id`) VA
 ALTER TABLE `items`
   ADD PRIMARY KEY (`item_id`);
 
--- 
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`

@@ -1,39 +1,6 @@
-from flask import Blueprint,Flask, redirect, url_for, render_template, request, session, flash
-import mysql.connector
-from flask_mail import Mail, Message
-import sys
-from werkzeug.utils import secure_filename
-import base64
-import os
-
-
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password=sys.argv[1],
-  database="miniamazon"
-)
-mycursor = mydb.cursor()
-
-app = Flask(__name__)
-mail = Mail(app)
-
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'stationeryhub123@gmail.com'
-app.config['MAIL_PASSWORD'] = 'snydbmsshub'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app) 
-
-app.config['UPLOAD_FOLDER'] = 'static/image/uploads/'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+from flask import Blueprint, render_template, Flask, session, flash, redirect
 
 user = Blueprint("success",__name__,static_folder="static", template_folder="template")
-
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-	
 
 @user.route('/')
 def success():
