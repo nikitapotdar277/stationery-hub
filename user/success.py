@@ -29,17 +29,13 @@ mail = Mail(app)
 app.config['UPLOAD_FOLDER'] = 'static/image/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
-user = Blueprint("success",__name__,static_folder="static", template_folder="template")
 
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-	
+user = Blueprint("success",__name__,static_folder="static", template_folder="template")
 
 @user.route('/')
 def success():
 	if "name" not in session:
-		flash("Please Login to continue","info")
-		return redirect('/login')
+		return "<h1><center>please login</center></h1>"
 	else:
 		return render_template('user.html', name = session['name'].lower())
 
@@ -102,7 +98,6 @@ def order(seller_email, item_name, item_type):
 	mycursor.execute(sql1, (seller_email, item_name, item_type))
 	db_val = mycursor.fetchone()
 
-	# img = img
 	sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
 	val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
 	mycursor.execute(sql2, val)
