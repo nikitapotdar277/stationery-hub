@@ -9,3 +9,4 @@ def success():
 		return redirect('/login')
 	else:
 		return render_template('user.html',name = session['name'].lower())
+
