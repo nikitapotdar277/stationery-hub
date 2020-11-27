@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from flask import Blueprint,Flask, redirect, url_for, render_template, request, session, flash
 import mysql.connector
 from flask_mail import Mail, Message
@@ -29,9 +28,6 @@ mail = Mail(app)
 
 app.config['UPLOAD_FOLDER'] = 'static/image/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-=======
-from flask import Blueprint, render_template, Flask, session, flash, redirect
->>>>>>> aa6d44402f93b032c41c75fcd2248629790513ee
 
 user = Blueprint("success",__name__,static_folder="static", template_folder="template")
 
@@ -47,16 +43,16 @@ def success():
 	else:
 		return render_template('user.html', name = session['name'].lower())
 
-@user.route('/lend',methods=['POST'])
-def lend():
-	return render_template("lend.html")
+@user.route('/rent',methods=['POST'])
+def rent():
+	return render_template("rent.html")
 
-@user.route('/lenditems',methods=['POST'])
-def lenditems():
+@user.route('/rentitems',methods=['POST'])
+def rentitems():
 	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
 	price = request.form["price"]
-	item_type = "lend"
+	item_type = "rent"
 	file = request.files['rentitem']
 	
 	if file and allowed_file(file.filename):
@@ -65,6 +61,7 @@ def lenditems():
 
 	else: 
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		return render_template("rent.html")
 
 
 	sql = "insert into items(email,item_name,price,item_type,img,sold) values(%s, %s, %s, %s,%s,%s);"
