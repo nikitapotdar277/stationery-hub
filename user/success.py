@@ -1,12 +1,41 @@
-from flask import Blueprint, render_template, Flask, session, flash, redirect
+from flask import Blueprint,Flask, redirect, url_for, render_template, request, session, flash
+import mysql.connector
+from flask_mail import Mail, Message
+import sys
+from werkzeug.utils import secure_filename
+import base64
+import os
+
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password=sys.argv[1],
+  database="miniamazon"
+)
+mycursor = mydb.cursor()
+
+app = Flask(__name__)
+mail = Mail(app)
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'stationeryhub123@gmail.com'
+app.config['MAIL_PASSWORD'] = 'snydbmsshub'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app) 
+
+app.config['UPLOAD_FOLDER'] = 'static/image/uploads/'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
 
 user = Blueprint("success",__name__,static_folder="static", template_folder="template")
 
 @user.route('/')
 def success():
 	if "name" not in session:
-		flash("Please Login to continue","info")
-		return redirect('/login')
+		return "<h1><center>please login</center></h1>"
 	else:
 		return render_template('user.html', name = session['name'].lower())
 
