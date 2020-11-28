@@ -29,8 +29,11 @@ mail = Mail(app)
 app.config['UPLOAD_FOLDER'] = 'static/image/uploads/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
-
 user = Blueprint("success",__name__,static_folder="static", template_folder="template")
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+	
 
 @user.route('/')
 def success():
@@ -50,6 +53,9 @@ def rentitems():
 	price = request.form["price"]
 	item_type = "rent"
 	file = request.files['rentitem']
+	# new_file = file
+	# print(len(new_file.read()))
+
 	
 	if file and allowed_file(file.filename):
 		image = secure_filename(file.filename)
@@ -57,6 +63,7 @@ def rentitems():
 
 	else: 
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		print(request.url)
 		return render_template("rent.html")
 
 
@@ -64,7 +71,7 @@ def rentitems():
 	val = (email,item_name,price,item_type,image,0)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	return render_template("index.html")
+	return "success"
 
 
 @user.route('/sell',methods=['POST'])
@@ -98,6 +105,7 @@ def order(seller_email, item_name, item_type):
 	mycursor.execute(sql1, (seller_email, item_name, item_type))
 	db_val = mycursor.fetchone()
 
+	# img = img
 	sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
 	val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
 	mycursor.execute(sql2, val)
