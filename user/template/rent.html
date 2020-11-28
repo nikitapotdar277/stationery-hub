@@ -22,7 +22,8 @@
 </head>
 <body>
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
-<form action="/user/rentitems" method="post" enctype="multipart/form-data"> 
+<form action="/rentitems" method="post"> 
+
   <div class="container">
     <h1>Rent Stationery</h1>
     <hr>
@@ -36,6 +37,7 @@
      <br><br>
 
      <form>
+
         <input type="file" id="myFile" name="rentitem">
       </form>
 

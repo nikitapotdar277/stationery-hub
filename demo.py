@@ -28,8 +28,11 @@ app.register_blueprint(user,url_prefix='/user')
 app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 
 
-@app.route('/<anything>')
+#table -> registration
+
+@app.errorhandler(404)
 def defaultpg(anything):
+	app.logger.info(f"Page not found :{request.url}")
 	return render_template('notfound.html')
 
 
@@ -76,9 +79,6 @@ def search():
 	sql = "select * from items where item_name = %s and sold = %s;"
 	mycursor.execute(sql, (search_item, False))
 	db_search = mycursor.fetchall()
-	# for i in db_search:
-	# 	for j in len(i):
-	# 		email, item_name, price, item_type = db_search[j]
 	return render_template('table.html', db_search = db_search)
 
 @app.route('/table')
