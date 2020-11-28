@@ -3,7 +3,7 @@ import mysql.connector
 from user.success import user
 from flask_mail import Mail, Message
 import sys
-
+import os
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -221,9 +221,6 @@ def home():
 @app.route('/home')
 def redirectHome():
 	return redirect('/')
-	
-	
-	
 	
 
 if __name__ == "__main__":

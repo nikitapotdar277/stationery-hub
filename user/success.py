@@ -131,3 +131,18 @@ def order(seller_email, item_name, item_type):
 	buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
 	mail.send(buyer_msg)
 	return('Ordered! Please check your mail')
+
+
+img_name,prices,review,history=[],[],[],[]
+
+@app.route('/main')
+def trial():
+	
+	img_name = ['static/user_pg/image_dy/'+i for i in os.listdir(r"./static/user_pg/image_dy/")]
+	print(img_name)
+	for i in range(len(img_name)):
+		prices.append((i+1)*100)
+		review.append((i+1))
+	return render_template("user1.html",img_name=img_name,prices=prices,review=review,slider=img_name,history=img_name)
+
+	
