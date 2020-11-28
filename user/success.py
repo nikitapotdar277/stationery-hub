@@ -38,7 +38,8 @@ def allowed_file(filename):
 @user.route('/')
 def success():
 	if "name" not in session:
-		return "<h1><center>please login</center></h1>"
+		flash("Please Login To Continue!")
+		return  redirect('/login')
 	else:
 		return render_template('user.html', name = session['name'].lower())
 
