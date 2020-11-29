@@ -1,4 +1,4 @@
-from flask import Blueprint,Flask, redirect, url_for, render_template, request, session, flash
+from flask import Blueprint,Flask, redirect, url_for, render_template, request, session
 import mysql.connector
 from flask_mail import Mail, Message
 import sys
@@ -135,10 +135,14 @@ def order(seller_email, item_name, item_type):
 
 img_name,prices,review,history=[],[],[],[]
 
-@app.route('/main')
+locations = {
+	""
+}
+
+@user.route('/main')
 def trial():
-	
-	img_name = ['static/user_pg/image_dy/'+i for i in os.listdir(r"./static/user_pg/image_dy/")]
+	print(os.getcwd())
+	img_name = ['static/user_pg/image_dy/'+i for i in os.listdir(r"./user/static/user_pg/image_dy/")]
 	print(img_name)
 	for i in range(len(img_name)):
 		prices.append((i+1)*100)
