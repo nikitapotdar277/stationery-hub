@@ -145,6 +145,15 @@ locations = {
 	""
 }
 
+@user.route('/test')
+def test():
+	return render_template("user2.html")
+
+@user.route('/product')
+def product():
+	return render_template("product.html")
+
+
 @user.route('/main')
 def trial():
 	print(os.getcwd())
