@@ -81,10 +81,11 @@ def logout():
 def search():
 	try:
 		search_item = request.form["search_item"]
-		sql = "select * from items where item_name = %s and sold = %s;"
+		sql = "select * from items where item_name LIKE %s and sold = %s;"
 		print(search_item,type(search_item))
-		mycursor.execute(sql, (search_item, 0))
+		mycursor.execute(sql, ("%" + search_item + "%", 0))
 		db_search = mycursor.fetchall()
+		print (db_search)
 		return render_template('table.html', db_search = db_search)
 	except Exception as e:
 		print(e)
@@ -216,15 +217,13 @@ def order(seller_email, item_name, item_type):
 
 @app.route('/')
 def home():
-	if request.method == "GET":
+
+	if "name" not in session:
+		return render_template("index.html")
+
+	else:
 		return redirect("user")
-	else: 
-		if "name" not in session:
-			return render_template("index.html")
-	
-		else:
-			return redirect("user")
-	
+
 
 if __name__ == "__main__":
 	TEMPLATES_AUTO_RELOAD = True
