@@ -1,4 +1,4 @@
-from flask import Blueprint,Flask, redirect, url_for, render_template, request, session
+from flask import Blueprint,Flask, redirect, url_for, render_template, request, session,flash
 import mysql.connector
 from flask_mail import Mail, Message
 import sys
@@ -33,6 +33,18 @@ user = Blueprint("success",__name__,static_folder="static", template_folder="tem
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def insert_image(file):
+	if file and allowed_file(file.filename):
+		image = secure_filename(file.filename)
+		path_ = os.path.join(app.config['UPLOAD_FOLDER']+session["year"]+'/'+session["branch"]+'/'+session["name"]+'/')
+		if not os.path.exists(path_):
+   	 		os.makedirs(path_)
+		file.save(path_ + '/' + image)
+		return 1,image
+	else:
+		return 0, 'null'
+
 	
 
 @user.route('/')
@@ -54,19 +66,14 @@ def rentitems():
 	price = request.form["price"]
 	item_type = "rent"
 	file = request.files['rentitem']
-	# new_file = file
-	# print(len(new_file.read()))
-
+		
 	
-	if file and allowed_file(file.filename):
-		image = secure_filename(file.filename)
-		file.save(os.path.join(app.config['UPLOAD_FOLDER'], image))
 
-	else: 
+	insert_success,image = insert_image(file)
+	if not insert_success:
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
 		print(request.url)
 		return render_template("rent.html")
-
 
 	sql = "insert into items(email,item_name,price,item_type,img,sold) values(%s, %s, %s, %s,%s,%s);"
 	val = (email,item_name,price,item_type,image,0)
@@ -86,12 +93,11 @@ def sell1():
 	price = request.form["price"]
 	file = request.files['sellitem']
 	
-	if file and allowed_file(file.filename):
-		image = secure_filename(file.filename)
-		file.save(os.path.join(app.config['UPLOAD_FOLDER'], image))
-
-	else: 
+	insert_success,image = insert_image(file)
+	if not insert_success:
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		print(request.url)
+		return render_template("sell.html")
 	
 	item_type = "sell"
 	sql = "insert into items(email,item_name,price,item_type,img, sold) values(%s, %s, %s, %s, %s, %s);"
