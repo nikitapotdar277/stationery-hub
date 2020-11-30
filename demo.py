@@ -118,11 +118,14 @@ def register():
 @app.route('/')
 @app.route('/home')
 def home():
-	if "name" not in session:
-		return render_template("index.html")
-
-	else:
+	if request.method == "GET":
 		return redirect("user")
+	else: 
+		if "name" not in session:
+			return render_template("index.html")
+	
+		else:
+			return redirect("user")
 	
 
 if __name__ == "__main__":
