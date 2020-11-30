@@ -50,7 +50,7 @@ def login():
 			email = request.form["username"]
 			password = request.form["user_pass"]
 			
-			sql = f"""select password from registration where email = '{email}';"""
+			sql = f"""select password,year,branch from registration where email = '{email}';"""
 			
 			try:
 				mycursor.execute(sql)
@@ -62,6 +62,9 @@ def login():
 				return redirect('/login')
 			elif db_pass[0] == password:
 				session["name"] = email[:email.find('@')]
+				session["year"] = db_pass[1]
+				session["branch"] = db_pass[2].upper()
+				print(session["year"])
 				return redirect("/user")
 
 		else:
@@ -103,7 +106,7 @@ def register():
 	if request.method == "POST":
 	
 		email = request.form["email"]
-		branch = request.form["branch"]
+		branch = request.form["branch"].upper()
 		year = request.form["year"]
 		password = request.form["psw"]
 		sql = f"""select * from registration where email = '{email}' """
