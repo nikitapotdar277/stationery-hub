@@ -152,7 +152,7 @@ def lenditems():
 	val = (email,item_name,price,item_type)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	return ('/success')
+	return render_template("user.html")
 
 @app.route('/sell',methods=['POST'])
 def sell():
@@ -173,7 +173,7 @@ def sell1():
 	val = (email,item_name,price,item_type)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	return ('/success')
+	return render_template("user.html")
 
 @app.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
 def order(seller_email, item_name, item_type):
