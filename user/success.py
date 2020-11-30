@@ -38,22 +38,25 @@ def allowed_file(filename):
 @user.route('/')
 def success():
 	if "name" not in session:
-		flash("Please Login to continue","info")
-		return redirect('/login')
+		flash("Please Login To Continue!")
+		return  redirect('/login')
 	else:
 		return render_template('user.html', name = session['name'].lower())
 
-@user.route('/lend',methods=['POST'])
-def lend():
-	return render_template("lend.html")
+@user.route('/rent',methods=['POST'])
+def rent():
+	return render_template("rent.html")
 
-@user.route('/lenditems',methods=['POST'])
-def lenditems():
+@user.route('/rentitems',methods=['POST'])
+def rentitems():
 	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
 	price = request.form["price"]
-	item_type = "lend"
+	item_type = "rent"
 	file = request.files['rentitem']
+	# new_file = file
+	# print(len(new_file.read()))
+
 	
 	if file and allowed_file(file.filename):
 		image = secure_filename(file.filename)
@@ -61,13 +64,15 @@ def lenditems():
 
 	else: 
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		print(request.url)
+		return render_template("rent.html")
 
 
 	sql = "insert into items(email,item_name,price,item_type,img,sold) values(%s, %s, %s, %s,%s,%s);"
 	val = (email,item_name,price,item_type,image,0)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	return render_template("index.html")
+	return "success"
 
 
 @user.route('/sell',methods=['POST'])
@@ -126,3 +131,22 @@ def order(seller_email, item_name, item_type):
 	buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
 	mail.send(buyer_msg)
 	return('Ordered! Please check your mail')
+
+
+img_name,prices,review,history=[],[],[],[]
+
+locations = {
+	""
+}
+
+@user.route('/main')
+def trial():
+	print(os.getcwd())
+	img_name = ['static/user_pg/image_dy/'+i for i in os.listdir(r"./user/static/user_pg/image_dy/")]
+	print(img_name)
+	for i in range(len(img_name)):
+		prices.append((i+1)*100)
+		review.append((i+1))
+	return render_template("user1.html",img_name=img_name,prices=prices,review=review,slider=img_name,history=img_name)
+
+	

@@ -22,7 +22,7 @@
   </head>  
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #e3f2fd;">
-  <a class="navbar-brand" href="#" style="font-family:'Modak', cursive;">Stationary Hub</a>
+  <a class="navbar-brand" href="/user/main" style="font-family:'Modak', cursive;">Stationary Hub</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -41,28 +41,19 @@
 </nav>
     <div class="slideshow-container">
 
-<div class="slideshow-container">
-    <div class="center">
-<div class="mySlides fade">
-  <div class="numbertext">1 / 3</div>
 
-  <img src="images/user_img7.jpg" style="width:50%;height:50%;align-self: center; margin-left: 25%; margin-right: 25%;">
-  <div class="text">Caption Text</div>
-  </div>
-  </div>
+<div class="slideshow-container">
+{%for i in range(3)%}
     <div class="center">
 <div class="mySlides fade">
-  <div class="numbertext">2 / 3</div>
-  <img src="images/user_img2.jpg" style="width:50%;height:50%; margin-left: 25%;margin-right: 25%;">
-  <div class="text">Caption Two</div>
-</div>
-</div>
-  <div class="center">
-<div class="mySlides fade">
-  <div class="numbertext">3 / 3</div>
-  <img src="images/user_img3.jpg" style="width:50%;height:50%; margin-left: 25%; margin-right: 25%;">
-  <div class="text">Caption Three</div>
+  <div class="numbertext">{{i}} / 3</div>
+
+  <img src="{{slider[i]}}" style="width:50%;height:50%;align-self: center; margin-left: 25%; margin-right: 25%;">
+  <div class="text"></div>
   </div>
+  </div>
+  {%endfor%}
+    
 </div>
 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
 <a class="next" onclick="plusSlides(1)">&#10095;</a>
@@ -84,121 +75,44 @@
 
 
 
-{%for i in range(1,6)%}
+{%for i in range(5)%}
   <div class="col-lg-4">
     <div class="card cards-shadown cards-hover">
         <div class="card-header"><span class="space">
-  <img src={{img_name[i]}} style="width:100%;height:100%;"></div>
+  <img src="{{img_name[i]}}" style="width:100%;height:100%;"></div>
+ 
            </span>
       <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 {{price[i]}};</p>
+                <p class="card-text sub-text-color">Price: {{prices[i]}}</p>
                 <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:{{review[i]}}</p>
             </div>
     </div>
   </div>
     
 {%endfor%}
-    
- 
-
-
-
-
-    <!--<div class="col-lg-4">
-    <div class="card cards-shadown cards-hover">
-        <div class="card-header"><span class="space">
-    <img src="images/user_img6.jpg" style="width:100%;height:100%;"></div>
-           </span>
-      <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 000</p>
-                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:</p>
-            </div>
-    </div>
-  </div>
-    <div class="col-lg-4">
-    <div class="card cards-shadown cards-hover">
-        <div class="card-header"><span class="space">
-    <img src="images/user_img5.jpg" style="width:100%;height:100%;"></div>
-           </span>
-      <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 000</p>
-                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:</p>
-            </div>
-    </div>
-  </div>
-    <div class="col-lg-4" style="padding-top:7%">
-    <div class="card cards-shadown cards-hover">
-        <div class="card-header"><span class="space">
-    <img src="images/user_img3.jpg" style="width:100%;height:100%; "></div>
-           </span>
-      <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 000 <br></p>
-                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:</p>
-            </div>
-    </div>
-  </div>
-    <div class="col-lg-4" style="padding-top:7%">
-    <div class="card cards-shadown cards-hover">
-        <div class="card-header"><span class="space">
-    <img src="images/user_img2.jpg" style="width:100%;height:100%; "></div>
-           </span>
-      <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 000</p>
-                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:</p>
-            </div>
-    </div>
-  </div>
-      <div class="col-lg-4" style="padding-top:7%">
-    <div class="card cards-shadown cards-hover">
-        <div class="card-header"><span class="space">
-    <img src="images/user_img6.jpg" style="width:100%;height:100%;"></div>
-           </span>
-      <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 000</p>
-                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:</p>
-            </div>
-    </div>
-  </div>-->
       </div>
     </div> 
   <hr class="solid">
   <h2>History!</h2>
   <div class="row">
+  
+  {%for i in range(1,4)%}
   <div class="col-lg-4">
     <div class="card cards-shadown cards-hover">
         <div class="card-header"><span class="space">
-    <img src="images/user_img7.jpg" style="width:100%;height:100%;"></div>
+    <img src="{{history[i]}}" style="width:100%;height:100%;"></div>
            </span>
       <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 000</p>
-                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:</p>
+                <p class="card-text sub-text-color">Price:&#x20B9 {{prices[i]}}</p>
+                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:{{review[i]}}</p>
             </div>
     </div>
   </div>
-    <div class="col-lg-4">
-    <div class="card cards-shadown cards-hover">
-        <div class="card-header"><span class="space">
-    <img src="images/user_img6.jpg" style="width:100%;height:100%;"></div>
-           </span>
-      <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 000</p>
-                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:</p>
-            </div>
-    </div>
-  </div>
-    <div class="col-lg-4">
-    <div class="card cards-shadown cards-hover">
-        <div class="card-header"><span class="space">
-    <img src="images/user_img5.jpg" style="width:100%;height:100%;"></div>
-           </span>
-      <div class="card-body">
-                <p class="card-text sub-text-color">Price:&#x20B9 000</p>
-                <p class="card-text cardbody-sub-text" style="color:Blue;font-weight: bold">Review:</p>
-            </div>
-    </div>
+  {%endfor%}
+    
   </div>
     </div>
-     <p style="font-family: 'Lobster', cursive; text-align: center; padding-top: 7%;font-size: 30px">
+     <p style="font-family: 'Lobster', cursive; text-align: center; padding-top: 7%;font-size: 20px">
        "Why to ask anyone if you have your own shop ¯\_(ツ)_/¯<br>
           Come n Grab your product at resonalble Price:)"
     </p>
