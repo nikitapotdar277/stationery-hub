@@ -53,7 +53,7 @@ def success():
 		flash("Please Login To Continue!")
 		return  redirect('/login')
 	else:
-		return render_template('user.html', name = session['name'].lower())
+		return render_template('user2.html', name = session['name'].lower())
 
 @user.route('/rent',methods=['POST'])
 def rent():

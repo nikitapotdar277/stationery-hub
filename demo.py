@@ -227,6 +227,10 @@ def home():
 	else:
 		return redirect("user")
 
+@app.route('/home')
+def red_to_home():
+	return redirect('/')
+
 
 if __name__ == "__main__":
 	TEMPLATES_AUTO_RELOAD = True
