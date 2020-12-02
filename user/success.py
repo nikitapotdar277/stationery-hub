@@ -170,3 +170,8 @@ def trial():
 @user.route('/wishlist',methods=['POST'])
 def wishlist():
 	return render_template('wishlist.html')
+
+
+@user.route('/myorders',methods=['GET','POST'])
+def myorders():
+	return render_template('orderHistory.html',title=session["name"])
