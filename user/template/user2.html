@@ -20,6 +20,7 @@
 		<i class="fa fa-times" id="close-btn" onclick="closemenu()"></i>
 
 
+
 		<h3 class="logo" style="font-family:'Modak', cursive;">Stationary Hub</h3>
 		<input type="text" class="form-control">
 		<span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
@@ -27,8 +28,9 @@
 	<div class="menu-bar">
 	<ul>
 		<li><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Cart</a></li>
-		<li><a href="/resister">Sign Up</a></li>
-		<li><a href="/login">Log In</a></li>
+		<li><a href="/register">Sign Up</a></li>
+		<li><a href="/">{{name}}</a></li>
+
 	</ul>	
 	</div>
 </div>
@@ -36,41 +38,13 @@
 <section class="header">
 	<div class="side-menu" id="side-menu">
 		<ul>
-			<a href="/sell"><li>Sell<i class="fa fa-angle-right" aria-hidden="true"></i></a>
-			</li>
-			<li href = "/rent">Rent<i class="fa fa-angle-right" aria-hidden="true"></i>
-			</li>
-			<li>FE<i class="fa fa-angle-right" aria-hidden="true"></i>
-			<ul>
-            	<li>Sub Menu-3</li>
-            	<li>Sub Menu-3</li>
-            	<li>Sub Menu-3</li>
-            	<li>Sub Menu-3</li>
-            </ul>
-            </li>
-            <li>SE<i class="fa fa-angle-right" aria-hidden="true"></i>
-            <ul>
-            	<li>Sub Menu-1</li>
-            	<li>Sub Menu-1</li>
-            	<li>Sub Menu-1</li>
-            	<li>Sub Menu-1</li>
-            </ul>
-			</li>
-			<li>TE<i class="fa fa-angle-right" aria-hidden="true"></i>
-			<ul>
-            	<li>Sub Menu-2</li>
-            	<li>Sub Menu-2</li>
-            	<li>Sub Menu-2</li>
-            	<li>Sub Menu-2</li>
-            </ul></li>
-			<li>BTech<i class="fa fa-angle-right" aria-hidden="true"></i>
-			<ul>
-            	<li>Sub Menu-3</li>
-            	<li>Sub Menu-3</li>
-            	<li>Sub Menu-3</li>
-            	<li>Sub Menu-3</li>
-            </ul>
-            </li>
+			<form action="/user/sell" method="POST">
+				<button type="submit" name="sell">Sell</button>
+			</form>
+			<form action="/user/rent" method="POST">
+				<button type="submit" name="rent">Rent</button>
+			</form>
+			
 		</ul>
 	</div>
 	<div class="slider">
