@@ -227,6 +227,30 @@ body
 {
 	margin: 0 0;
 }
+.title-box
+{
+ background: #92b9d4;
+ color: #fff;
+ width: 181px;
+ padding: 4px 10px;
+ height: 40px;
+ margin-bottom: 30px;
+display: flex;
+}
+.title-box h2
+{
+	font-size: 24px;
+}
+.title-box::after
+{
+	content: '';
+	border-top: 40px solid #92b9d4;
+	border-right: 50px solid transparent;
+	position: absolute;
+	display: flex;
+	margin-top: -4px;
+	margin-left: 170px; 
+}
 .featured-categories img
 {
 	width:100%;
