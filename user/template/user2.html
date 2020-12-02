@@ -47,7 +47,6 @@
 		<li><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Cart</a></li>
 		<li><a href="/register">Sign Up</a></li>
 		<li><a href="/">{{name}}</a></li>
-		 <li><a class="nav-link" href="{{url_for('logout')}}"><i class="fa fa-sign-out"></i></a></li>
 
 	</ul>	
 	</div>
@@ -62,6 +61,11 @@
 			<form action="/user/rent" method="POST">
 				<button type="submit" name="rent">Rent</button>
 			</form>
+			<form action="/logout">
+				<button type="submit">LogOut</button>
+				
+
+				
 			
 		</ul>
 	</div>
@@ -329,7 +333,13 @@
           Come n Grab your product at resonalble Price:)"
     </p>
 
+
 {%include 'footer.html'%}
+
+
+
+
+
 
 <script>
 	function openmenu()
