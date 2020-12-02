@@ -129,7 +129,9 @@ def register():
 			#print(sql)
 			mycursor.execute(sql,val)
 			mydb.commit()
-			return f"<h1>You have successfully entered the right data</h1>"
+			flash("You have successfully registered, Login to countine!") #It shoild be in green color
+			return redirect("/login")
+
 		else:
 			flash("Username already exists please Login")
 			return redirect("login")

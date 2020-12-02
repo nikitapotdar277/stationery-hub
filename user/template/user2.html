@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Stationary Hub</title>
+	<title>StationaryHub</title>
 	<link rel="stylesheet" href="{{url_for('static',filename='user2.css')}}">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -11,7 +11,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
+		{% block content %}
+			{% with message = get_flashed_messages() %}
+				{% if message %}
+					{% for msg in message %}
+					<div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+						<p><center>{{msg}}</p></center>
+  
+</div>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		{% endblock%}
+		
 </head>
 <body>
 <div class="top-nav-bar">
@@ -21,15 +35,19 @@
 
 
 
-		<h3 class="logo" style="font-family:'Modak', cursive;">Stationary Hub</h3>
+		<h3 class="logo" style="font-family:'Modak', cursive;">StationaryHub</h3>
 		<input type="text" class="form-control">
 		<span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
 	</div>
+	 
+           
+          
 	<div class="menu-bar">
 	<ul>
 		<li><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Cart</a></li>
 		<li><a href="/register">Sign Up</a></li>
 		<li><a href="/">{{name}}</a></li>
+		 <li><a class="nav-link" href="{{url_for('logout')}}"><i class="fa fa-sign-out"></i></a></li>
 
 	</ul>	
 	</div>

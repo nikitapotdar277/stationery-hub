@@ -79,7 +79,8 @@ def rentitems():
 	val = (email,item_name,price,item_type,image,0)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	return "success"
+	flash("You have successfully Inserted The Details!")
+	return redirect("/user")
 
 
 @user.route('/sell',methods=['POST'])
@@ -104,7 +105,8 @@ def sell1():
 	val = (email,item_name,int(price),item_type,image,0)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	return ('success')
+	flash("You have successfully Inserted The Details!")
+	return redirect("/user")
 
 @user.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
 def order(seller_email, item_name, item_type):
@@ -147,7 +149,7 @@ locations = {
 
 @user.route('/test')
 def test():
-	return render_template("user2.html")
+	return render_template("user2.html",name="LOGIN")
 
 @user.route('/product')
 def product():
