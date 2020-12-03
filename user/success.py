@@ -39,9 +39,14 @@ def insert_image(file):
 		image = secure_filename(file.filename)
 		path_ = os.path.join(app.config['UPLOAD_FOLDER']+session["year"]+'/'+session["branch"]+'/'+session["name"]+'/')
 		if not os.path.exists(path_):
-   	 		os.makedirs(path_)
-		file.save(path_ + '/' + image)
-		return 1,image
+			os.makedirs(path_)
+
+		sql = "select item_id from items order by item_id desc LIMIT 1;" #LIMIT DESC
+		mycursor.execute(sql)
+		index_= int(mycursor.fetchone()[0]) + 1
+
+		file.save(path_ + '/' + str(index_)+'.jpg')
+		return 1,(str(index_)+'.jpg')
 	else:
 		return 0, 'null'
 
@@ -67,7 +72,8 @@ def rentitems():
 	item_type = "rent"
 	file = request.files['rentitem']
 		
-	
+# select branch,year from registration join items on registration.email = items.email;
+
 
 	insert_success,image = insert_image(file)
 	if not insert_success:
@@ -92,8 +98,8 @@ def sell1():
 	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
 	price = request.form["price"]
-	file = request.files['sellitem']
-	
+	file = request.files['sellitem'] # name
+	print(file)
 	insert_success,image = insert_image(file)
 	if not insert_success:
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
@@ -172,6 +178,10 @@ def wishlist():
 	return render_template('wishlist.html')
 
 
-@user.route('/myorders',methods=['GET','POST'])
+@user.route('/myorders',methods=['POST'])
 def myorders():
 	return render_template('orderHistory.html',title=session["name"])
+
+@user.route('/mycart',methods=['GET'])
+def mycart():
+	return render_template('cart.html')

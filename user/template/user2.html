@@ -44,7 +44,7 @@
           
 	<div class="menu-bar">
 	<ul>
-		<li><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Cart</a></li>
+		<li><a href="/user/mycart"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Cart</a></li>
 		<li><a href="/register">Sign Up</a></li>
 		<li><a href="/">{{name}}</a></li>
 
@@ -64,7 +64,7 @@
 				<input type="submit" class="btn btn-outline-light " value="Rent" style="margin-top: 10px;margin-bottom: 10px;margin-right:0;width:63%">
 				
 			</form>
-			<form action="/user/myorders">
+			<form action="/user/myorders" method="POST">
 				<input type="submit" class="btn btn-outline-light "  value="MyOrder"style="margin-top: 10px;margin-bottom: 10px;width:63%">
 			</form>
 			<form action="/logout">

@@ -84,7 +84,7 @@ def logout():
 def search():
 	try:
 		search_item = request.form["search_item"]
-		sql = "select * from items where item_name LIKE %s and sold = %s;"
+		sql = "select * from items where item_name LIKE %s and sold = %s;"   #LIKE USED
 		print(search_item,type(search_item))
 		mycursor.execute(sql, ("%" + search_item + "%", 0))
 		db_search = mycursor.fetchall()
@@ -189,16 +189,18 @@ def order(seller_email, item_name, item_type):
 		db_val = mycursor.fetchone()
 
 
-		# img = img
+		# for for emails
 		sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
 		val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
 		mycursor.execute(sql2, val)
 		mydb.commit()
 
+		#change stat to 1 fro all 
 		sql3 = "update items set sold = 1 where email = %s and item_name = %s and item_type = %s;"
 		mycursor.execute(sql3, (seller_email, item_name, item_type))
 		mydb.commit()
 
+		#for emails
 		seller_msg = Message(
 			'Hello',
 			sender='stationeryhub123@gmail.com',
