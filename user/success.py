@@ -161,6 +161,11 @@ def test():
 def product():
 	return render_template("product.html")
 
+@user.route('/user3')
+def user3():
+	return render_template("user3.html")
+
+
 
 @user.route('/main')
 def trial():
