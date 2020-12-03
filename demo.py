@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 import mysql.connector
-from user.success import user
+from user.success import user,path_finder
 from flask_mail import Mail, Message
 import sys
 import os
@@ -29,6 +29,16 @@ app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 
 
 #table -> registration
+
+
+
+
+
+
+
+
+
+
 
 @app.errorhandler(404)
 def defaultpg(anything):
@@ -61,10 +71,13 @@ def login():
 				flash("User Name or Password INCORRECT!!")
 				return redirect('/login')
 			elif db_pass[0] == password:
+				print("EMAIL ---->",email)
+				session["email"] = email
 				session["name"] = email[:email.find('@')]
 				session["year"] = db_pass[1]
 				session["branch"] = db_pass[2].upper()
 				print(session["year"])
+				print("EMAIL ---->",session["email"])
 				return redirect("/user")
 
 		else:
@@ -89,7 +102,21 @@ def search():
 		mycursor.execute(sql, ("%" + search_item + "%", 0))
 		db_search = mycursor.fetchall()
 		print (db_search)
-		return render_template('table.html', db_search = db_search)
+		value = {
+		0:"IN STOCK",
+		1:"NOT IN STOCK"
+		}
+
+		link,file_name = path_finder()
+		list_ = []
+		#print("DEBUGGING")
+		for index,val in enumerate(file_name):
+			for row in db_search:
+				if val in row[-2]:
+					list_.append(link[index])
+					print(link[index])
+
+		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name="LOGIN")
 	except Exception as e:
 		print(e)
 		app.logger.info(f"Exception occured while encountering search :{request.url,e}")

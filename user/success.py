@@ -34,6 +34,25 @@ user = Blueprint("success",__name__,static_folder="static", template_folder="tem
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def path_finder():
+	paths = []
+	
+	for i,j,k in os.walk(r"C:\Users\College\Documents\GitHub\dbms\static\image\uploads" ):
+		
+		if k != []:
+			paths.append([(i+'\\'+file) for file in k])
+	actual = []
+	for i in (paths):
+		for j in i:
+			actual.append(j)
+			
+
+	url_,file_name = [],[]
+	for i in actual:
+		url_.append('/'.join(i.split('\\')[6:]))
+		file_name.append(i.split('\\')[-1])
+	return url_,file_name
+
 def insert_image(file):
 	if file and allowed_file(file.filename):
 		image = secure_filename(file.filename)
@@ -58,7 +77,38 @@ def success():
 		flash("Please Login To Continue!")
 		return  redirect('/login')
 	else:
-		return render_template('user2.html', name = session['name'].lower())
+		try:
+
+			sql =f"""select * from items where email not in ('{session["email"]}');"""  #LIKE USED
+			#print(search_item,type(search_item))
+			mycursor.execute(sql)
+			db_search = mycursor.fetchall()
+			#print (db_search)
+			value = {
+			0:"IN STOCK",
+			1:"NOT IN STOCK"
+			}
+
+			link,file_name = path_finder()
+			list_ = []
+			print("START__________")
+			print(link)
+			print(file_name)
+			print("END____________")
+			#print("DEBUGGING")
+			for index,val in enumerate(file_name):
+				for row in db_search:
+					if val in row[-2]:
+						list_.append(link[index])
+						print(link[index])
+
+			return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name=session["name"].lower())
+		except Exception as e:
+			print(e)
+			app.logger.info(f"Exception occured while encountering search :{request.url,e}")
+
+			return redirect('/somethingwentwrong')
+		#return render_template('user2.html', name = session['name'].lower())
 
 @user.route('/rent',methods=['POST'])
 def rent():

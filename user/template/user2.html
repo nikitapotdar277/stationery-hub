@@ -130,17 +130,19 @@
 			<h2>More Products</h2>
 		</div>
 		<div class="row">
+		{% for i,row in (db_search) %}
 			<div class="col-md-3">
 				<div class="product-top">
-					<a href="product"><img src="static/images/img (8).jpg"></a>
+					<a href="product"><img src="/{{list_[i]}}"></a>
 					<div class="overlay-right">
-						
+						<form action="/">
 						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
-							<i class="fa fa-heart"></i>
+							<i class="fa fa-heart"></i></form>
 						</button>
+						<form action="user/mycart">
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
-						</button>
+						</button></form>
 					</div>
 				</div>
 				<div class="product-bottom text-center">
@@ -149,12 +151,13 @@
 					<i class="fa fa-star"></i>
 					<i class="fa fa-star"></i>
 					<i class="fa fa-star-half-o"></i>
-					<h3>Product Name</h3>
-					<h5>&#x20B9; 000</h5>
+					<h3>{{row[2]}}</h3>
+					<h5>&#x20B9; {{row[3]}}</h5>
 
 				</div>
 			</div>
-			<div class="col-md-3">
+			{% endfor %}
+			<!-- <div class="col-md-3">
 				<div class="product-top">
 					<img src="static/images/img (12).jpg">
 					<div class="overlay-right">
@@ -227,7 +230,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 </section>
 
 <!---------------------New Product---------------------->
