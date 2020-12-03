@@ -62,8 +62,10 @@ def insert_image(file):
 
 		sql = "select item_id from items order by item_id desc LIMIT 1;" #LIMIT DESC
 		mycursor.execute(sql)
-		index_= int(mycursor.fetchone()[0]) + 1
-
+		try:
+			index_= int(mycursor.fetchone()[0]) + 1
+		except:
+			index_ = 1
 		file.save(path_ + '/' + str(index_)+'.jpg')
 		return 1,(str(index_)+'.jpg')
 	else:
@@ -77,7 +79,7 @@ def success():
 		flash("Please Login To Continue!")
 		return  redirect('/login')
 	else:
-		try:
+		# try:
 
 			sql =f"""select * from items where email not in ('{session["email"]}');"""  #LIKE USED
 			#print(search_item,type(search_item))
@@ -91,23 +93,25 @@ def success():
 
 			link,file_name = path_finder()
 			list_ = []
-			print("START__________")
-			print(link)
-			print(file_name)
-			print("END____________")
+			# print("START__________")
+			# print(link)
+			# print(file_name)
+			# print("END____________")
 			#print("DEBUGGING")
+			fname = []
 			for index,val in enumerate(file_name):
 				for row in db_search:
 					if val in row[-2]:
 						list_.append(link[index])
-						print(link[index])
+						#print(link[index])
+						fname.append(val)
 
-			return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name=session["name"].lower())
-		except Exception as e:
-			print(e)
-			app.logger.info(f"Exception occured while encountering search :{request.url,e}")
+			return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,filename=fname,name=session["name"].lower())
+		#except Exception as e:
+			# print(e)
+			# app.logger.info(f"Exception occured while encountering search :{request.url,e}")
 
-			return redirect('/somethingwentwrong')
+			# return redirect('/somethingwentwrong')
 		#return render_template('user2.html', name = session['name'].lower())
 
 @user.route('/rent',methods=['POST'])
@@ -138,6 +142,17 @@ def rentitems():
 	flash("You have successfully Inserted The Details!")
 	return redirect("/user")
 
+@user.route('cart/<string:seller_email>/<string:item_name>/<string:image>')
+def Cart(seller_email,item_name,image):
+	try:
+		sql = """insert into cart(email,item_name,img) values(%s,%s,%s)"""
+		mycursor.execute(sql, (seller_email, item_name, image))
+		mydb.commit()
+		flash("Insert into cart successfully done")
+		return redirect('/')
+	except :
+		print("ERRORR")
+		redirect('/somethingwentwrong')
 
 @user.route('/sell',methods=['POST'])
 def sell():
@@ -239,4 +254,31 @@ def myorders():
 
 @user.route('/mycart',methods=['GET'])
 def mycart():
-	return render_template('cart.html')
+	sql = """select cart.email,cart.item_name,items.price,cart.img from cart join items on cart.img = items.img;"""
+	mycursor.execute(sql)
+	db_search = mycursor.fetchall()
+	#print (db_search)
+	value = {
+			0:"IN STOCK",
+			1:"NOT IN STOCK"
+			}
+
+	link,file_name = path_finder()
+	list_ = []
+	# print("START__________")
+	# print(link)
+	# print(file_name)
+	# print("END____________")
+	#print("DEBUGGING")
+	fname = []
+	for index,val in enumerate(file_name):
+		for row in db_search:
+			if val in row[-1]:
+				print("Inside loop")
+				list_.append(link[index])
+				print(link[index])
+				fname.append(val)
+
+	return render_template('cart.html', db_search = enumerate(db_search),list_=list_)
+		
+	#return render_template('cart.html')

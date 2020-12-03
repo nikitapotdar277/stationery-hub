@@ -139,8 +139,8 @@
 						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i></form>
 						</button>
-						<form action="user/mycart">
-						<button type="button" class="btn btn-secondary" title=" Add to cart">
+						<form action="{{url_for('success.Cart', seller_email = row[1], item_name = row[2], image = filename[i])}}">
+						<button type="submit" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button></form>
 					</div>
