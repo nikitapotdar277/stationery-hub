@@ -171,6 +171,7 @@ def sell1():
 	item_name = request.form["item"]
 	price = request.form["price"]
 	file = request.files['sellitem'] # name
+	description=request.form['description']
 	#print(file)
 	insert_success,image = insert_image(file)
 	if not insert_success:
