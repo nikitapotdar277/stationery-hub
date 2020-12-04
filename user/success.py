@@ -253,7 +253,7 @@ def wishlist():
 def myorders():
 	return render_template('orderHistory.html',title=session["name"])
 
-@user.route('/mycart',methods=['GET'])
+@user.route('/mycart',methods=['POST'])
 def mycart():
 	sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
 	mycursor.execute(sql)
