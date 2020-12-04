@@ -255,7 +255,7 @@ def myorders():
 
 @user.route('/mycart',methods=['GET'])
 def mycart():
-	sql = """ select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img order by cart.img;"""
+	sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
 	mycursor.execute(sql)
 	db_search = mycursor.fetchall()
 	#print (db_search)
@@ -301,7 +301,7 @@ def mycart():
 	for i in db_search:
 		total += i[2]
 
-	sql = """ select count(*) from cart;"""
+	sql = f""" select count(*) from cart where cart_holder='{session['email']}';"""
 	mycursor.execute(sql)
 	count = int(mycursor.fetchone()[0])
 	return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count)
