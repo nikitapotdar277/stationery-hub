@@ -133,12 +133,12 @@
 		{% for i,row in (db_search) %}
 			<div class="col-md-3">
 				<div class="product-top">
-					<a href="product"><img src="/{{list_[i]}}"></a>
+					<a href="product"><img src="{{list_[i]}}"></a>
 					<div class="overlay-right">
-						<form action="/">
-						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
-							<i class="fa fa-heart"></i></form>
-						</button>
+						<form action="user/wishlist">
+						<button type="submit" class="btn btn-secondary" title="Add to Wishlist">
+							<i class="fa fa-heart"></i>
+						</button></form>
 						<form action="user/mycart">
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
@@ -245,9 +245,10 @@
 					<a href="product.html"><img src="static/images/img (8).jpg"></a>
 					<div class="overlay-right">
 						
-						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
+						<form action="/user/wishlist">
+						<button type="submit" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i>
-						</button>
+						</button></form>
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>
@@ -269,9 +270,10 @@
 					<img src="static/images/img (12).jpg">
 					<div class="overlay-right">
 						
-						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
+						<form action="/user/wishlist">
+						<button type="submit" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i>
-						</button>
+						</button></form>
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>
@@ -293,9 +295,10 @@
 					<img src="static/images/img (10).jpg">
 					<div class="overlay-right">
 						
-						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
+						<form action="/user/wishlist">
+						<button type="submit" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i>
-						</button>
+						</button></form>
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>
@@ -317,9 +320,10 @@
 					<img src="static/images/img (11).jpg">
 					<div class="overlay-right">
 						
-						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
+						<form action="/user/wishlist">
+						<button type="submit" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i>
-						</button>
+						</button></form>
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>
