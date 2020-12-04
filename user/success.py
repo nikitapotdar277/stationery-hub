@@ -244,7 +244,7 @@ def trial():
 	return render_template("user1.html",img_name=img_name,prices=prices,review=review,slider=img_name,history=img_name)
 
 	
-@user.route('/wishlist',methods=['GET','POST'])
+@user.route('/wishlist',methods=['POST'])
 def wishlist():
 	return render_template('wishlist.html',name=session["name"])
 

@@ -96,10 +96,18 @@ def logout():
 @app.route('/search', methods=['POST'])
 def search():
 	try:
+
 		search_item = request.form["search_item"]
-		sql = "select * from items where item_name LIKE %s and sold = %s;"   #LIKE USED
-		print(search_item,type(search_item))
-		mycursor.execute(sql, ("%" + search_item + "%", 0))
+		if "name" not in session:
+			sql = "select * from items where item_name LIKE %s and sold = %s;"   #LIKE USED
+			mycursor.execute(sql, ("%" + search_item + "%", 0))
+			name = "LOGIN"
+		else:
+			sql = f"""select * from items where email not in ('{session["email"]}') and item_name like '%{search_item}%' and sold = 0 ;"""
+			mycursor.execute(sql)
+			name = session["name"]
+		#print(search_item,type(search_item))
+		
 		db_search = mycursor.fetchall()
 		print (db_search)
 		value = {
@@ -115,7 +123,7 @@ def search():
 					list_.append(link[index])
 					print(link[index])
 
-		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name="LOGIN",filename=file_name)
+		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=file_name)
 	except Exception as e:
 		print(e)
 		app.logger.info(f"Exception occured while encountering search :{request.url,e}")
