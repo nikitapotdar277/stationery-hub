@@ -71,13 +71,13 @@ def login():
 				flash("User Name or Password INCORRECT!!")
 				return redirect('/login')
 			elif db_pass[0] == password:
-				print("EMAIL ---->",email)
+				#print("EMAIL ---->",email)
 				session["email"] = email
 				session["name"] = email[:email.find('@')]
 				session["year"] = db_pass[1]
 				session["branch"] = db_pass[2].upper()
-				print(session["year"])
-				print("EMAIL ---->",session["email"])
+				#print(session["year"])
+				#print("EMAIL ---->",session["email"])
 				return redirect("/user")
 
 		else:
@@ -109,14 +109,13 @@ def search():
 
 		link,file_name = path_finder()
 		list_ = []
-		#print("DEBUGGING")
 		for index,val in enumerate(file_name):
 			for row in db_search:
 				if val in row[-2]:
 					list_.append(link[index])
 					print(link[index])
 
-		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name="LOGIN")
+		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name="LOGIN",filename=file_name)
 	except Exception as e:
 		print(e)
 		app.logger.info(f"Exception occured while encountering search :{request.url,e}")
@@ -137,7 +136,7 @@ def register():
 		year = request.form["year"]
 		password = request.form["psw"]
 		sql = f"""select * from registration where email = '{email}' """
-		print(sql)
+		#print(sql)
 		try:
 			mycursor.execute(sql)
 		except:
@@ -201,7 +200,7 @@ def sell1():
 		flash("Price must be a number!!")
 		return redirect('/sell')
 	item_type = "sell"
-	print(email,price,item_type,item_name)
+	#print(email,price,item_type,item_name)
 	sql = "insert into items(email,item_name,price,item_type) values(%s, %s, %s, %s);"
 	val = (email,item_name,price,item_type)
 	mycursor.execute(sql, val)

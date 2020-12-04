@@ -64,13 +64,17 @@
 				<input type="submit" class="btn btn-outline-light " value="Rent" style="margin-top: 10px;margin-bottom: 10px;margin-right:0;width:63%">
 				
 			</form>
+			<form action="/user/wishlist" method="POST">
+				<input type="submit" class="btn btn-outline-light " value="Wishlist" style="margin-top: 10px;margin-bottom: 10px;margin-right:0;width:63%">
+				
+			</form>
 			<form action="/user/myorders" method="POST">
 				<input type="submit" class="btn btn-outline-light "  value="MyOrder" style="margin-top: 10px;margin-bottom: 10px;width:63%">
 			</form>
 
 			<!-- Example single danger button -->
 			<div class="btn-group">
-  				<button type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-top: 10px;margin-bottom: 10px;width:85px;">Sort
+  				<button type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-top: 10px;margin-bottom: 10px;width:100px;">Sort
   				</button>
   				<div class="dropdown-menu">
     				<a class="dropdown-item"><button class="btn btn-outline-dark" style="margin-top: 10px;margin-bottom: 10px;width:85px;">By Name</button></a>
@@ -117,7 +121,7 @@
 </section>
 
  <!--------------------featured-categories------------------>
-<section class="featured-categories">
+<!-- <section class="featured-categories">
 	<div class="container">
 		
 		<div class="row">
@@ -134,7 +138,7 @@
 	</div>
 	
 </section>
-<!-----------------On Sale Products------------------>
+ --><!-----------------On Sale Products------------------>
 
 <section class="on-sale">
 	<div class="container">
@@ -145,7 +149,7 @@
 		{% for i,row in (db_search) %}
 			<div class="col-md-3">
 				<div class="product-top">
-					<a href="product"><img src="/{{list_[i]}}"></a>
+					<a href="product"><img src="/{{list_[i]}}" height="180px" width="210px"></a>
 					<div class="overlay-right">
 						<form action="/">
 						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
@@ -354,7 +358,7 @@
 
  <p style="font-family: 'Lobster', cursive; text-align: center; padding-top: 7%;font-size: 20px">
        "Why to ask anyone if you have your own shop ¯\_(ツ)_/¯<br>
-          Come n Grab your product at resonalble Price:)"
+          Come n Grab your product at reasonable Price:)"
     </p>
 
 

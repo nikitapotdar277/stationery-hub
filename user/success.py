@@ -93,11 +93,6 @@ def success():
 
 			link,file_name = path_finder()
 			list_ = []
-			# print("START__________")
-			# print(link)
-			# print(file_name)
-			# print("END____________")
-			#print("DEBUGGING")
 			fname = []
 			for index,val in enumerate(file_name):
 				for row in db_search:
@@ -145,13 +140,25 @@ def rentitems():
 @user.route('cart/<string:seller_email>/<string:item_name>/<string:image>')
 def Cart(seller_email,item_name,image):
 	try:
-		sql = """insert into cart(email,item_name,img) values(%s,%s,%s)"""
-		mycursor.execute(sql, (seller_email, item_name, image))
+		sql = """insert into cart(product_email,item_name,img,cart_holder) values(%s,%s,%s,%s)"""
+		mycursor.execute(sql, (seller_email, item_name, image,session["email"]))
 		mydb.commit()
 		flash("Insert into cart successfully done")
 		return redirect('/')
 	except :
-		print("ERRORR")
+		#print("ERRORR")
+		redirect('/somethingwentwrong')
+
+@user.route('cartD/<int:id>',methods=['POST'])
+def CartD(id):
+	try:
+		sql = f"""delete from cart where item_id = {id}"""
+		mycursor.execute(sql)
+		mydb.commit()
+		flash("DELETION successfully done")
+		return redirect('/user/mycart')
+	except :
+		#print("ERRORR")
 		redirect('/somethingwentwrong')
 
 @user.route('/sell',methods=['POST'])
@@ -164,7 +171,7 @@ def sell1():
 	item_name = request.form["item"]
 	price = request.form["price"]
 	file = request.files['sellitem'] # name
-	print(file)
+	#print(file)
 	insert_success,image = insert_image(file)
 	if not insert_success:
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
@@ -212,12 +219,6 @@ def order(seller_email, item_name, item_type):
 	return('Ordered! Please check your mail')
 
 
-img_name,prices,review,history=[],[],[],[]
-
-locations = {
-	""
-}
-
 @user.route('/test')
 def test():
 	return render_template("user2.html",name="LOGIN")
@@ -234,18 +235,18 @@ def user3():
 
 @user.route('/main')
 def trial():
-	print(os.getcwd())
+	#print(os.getcwd())
 	img_name = ['static/user_pg/image_dy/'+i for i in os.listdir(r"./user/static/user_pg/image_dy/")]
-	print(img_name)
+	#print(img_name)
 	for i in range(len(img_name)):
 		prices.append((i+1)*100)
 		review.append((i+1))
 	return render_template("user1.html",img_name=img_name,prices=prices,review=review,slider=img_name,history=img_name)
 
 	
-@user.route('/wishlist',methods=['POST'])
+@user.route('/wishlist',methods=['GET','POST'])
 def wishlist():
-	return render_template('wishlist.html')
+	return render_template('wishlist.html',name=session["name"])
 
 
 @user.route('/myorders',methods=['POST'])
@@ -254,7 +255,7 @@ def myorders():
 
 @user.route('/mycart',methods=['GET'])
 def mycart():
-	sql = """select cart.email,cart.item_name,items.price,cart.img from cart join items on cart.img = items.img;"""
+	sql = """ select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img order by cart.img;"""
 	mycursor.execute(sql)
 	db_search = mycursor.fetchall()
 	#print (db_search)
@@ -263,22 +264,53 @@ def mycart():
 			1:"NOT IN STOCK"
 			}
 
+			# ()
+			# ()
+			# [hello,hi,bye]
+			# index,val
+# 6,7,1,8 --->file_name
+# 1,6,7,8 ---->val
 	link,file_name = path_finder()
 	list_ = []
-	# print("START__________")
-	# print(link)
-	# print(file_name)
-	# print("END____________")
-	#print("DEBUGGING")
 	fname = []
-	for index,val in enumerate(file_name):
-		for row in db_search:
-			if val in row[-1]:
-				print("Inside loop")
-				list_.append(link[index])
-				print(link[index])
-				fname.append(val)
+	print("Loop begins")
 
-	return render_template('cart.html', db_search = enumerate(db_search),list_=list_)
+	print(db_search)
+	#(db_search.sort(key=lambda x:x[-1]))
+	#print(db_search)
+	#file_name
+	# list1, list2 = zip(*sorted(zip(file_name,link)))
+	# print("List1 starts")
+	# print(list1)
+	# print(list2)
+	# print("List2 end")
+
+	# DO NOT TOUCH
+	link = sorted(link, key = lambda x: file_name[link.index(x)])
+	file_name.sort()
+	# DO NOT TOUCH
+	total = 0
+	for index,val in enumerate(file_name):
+		for row in (db_search):
+			if val in row[-2]:
+				list_.append(link[index])
+				print("list--->",link[index])
+				fname.append(val)
+				print("Fname-->",val)
+	print("Loop ends")
+	for i in db_search:
+		total += i[2]
+
+	sql = """ select count(*) from cart;"""
+	mycursor.execute(sql)
+	count = int(mycursor.fetchone()[0])
+	return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count)
 		
 	#return render_template('cart.html')
+
+@user.route('/emptyCart',methods=['POST'])
+def emptyCart():
+	sql = """truncate cart;"""
+	mycursor.execute(sql)
+	mydb.commit()
+	return redirect('/user/mycart')
