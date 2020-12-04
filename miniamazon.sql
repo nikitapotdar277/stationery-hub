@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.21, for Win64 (x86_64)
 --
 -- Host: localhost    Database: miniamazon
 -- ------------------------------------------------------
--- Server version	8.0.22
+-- Server version	8.0.21
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -40,6 +40,33 @@ LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
 INSERT INTO `cart` VALUES (1,'yelaiyugandhar@gmail.com','ciso drafter','7.jpg','nikita.potdar15@gmail.com'),(6,'yelaiyugandhar@gmail.com','book sepm','4.jpg','sakship1920@gmail.com'),(7,'sakship1920@gmail.com','big drafter','6.jpg','yelaiyugandhar@gmail.com'),(8,'sakship1920@gmail.com','trial','7.jpg','yelaiyugandhar@gmail.com'),(9,'yelaiyugandhar@gmail.com','yugandhar','8.jpg','nikita.potdar15@gmail.com'),(10,'yelaiyugandhar@gmail.com','cello drafter','7.jpg','sakship1920@gmail.com');
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `extrathings`
+--
+
+DROP TABLE IF EXISTS `extrathings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `extrathings` (
+  `desc_id` int NOT NULL AUTO_INCREMENT,
+  `ranking` int DEFAULT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `item_id` int DEFAULT NULL,
+  PRIMARY KEY (`desc_id`),
+  KEY `item_id` (`item_id`),
+  CONSTRAINT `extrathings_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `items` (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `extrathings`
+--
+
+LOCK TABLES `extrathings` WRITE;
+/*!40000 ALTER TABLE `extrathings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `extrathings` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -134,4 +161,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-04 22:54:29
+-- Dump completed on 2020-12-04 23:06:18
