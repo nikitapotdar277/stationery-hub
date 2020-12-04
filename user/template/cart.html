@@ -26,14 +26,14 @@
                     </tr>
                 </thead>
                 <tbody>
-    
+                    {% for i,row in (db_search) %}
                     <tr>
                         <td class="col-sm-8 col-md-6">
                         <div class="media">
-                            <a class="thumbnail pull-left" href="#"> <img class="media-object" src="/static/images/product-images/" style="width: 72px; height: 72px;"> </a>
+                            <a class="thumbnail pull-left" href="#"> <img class="media-object" src="/{{list_[i]}}" style="width: 72px; height: 72px;"></a>
                             <div class="media-body">
-                                <h4 class="media-heading"> <a href="#">product name</a></h4>
-                                <h5 class="media-heading"> by <a href="#">Persons name</a></h5>
+                                <h4 class="media-heading"> <a href="#">{{row[1]}}</a></h4>
+                                <h5 class="media-heading"> by <a href="#">{{row[0]}}</a></h5>
                                 <span>Status: </span><span class="text-success"><strong>In Stock</strong></span>
                             </div>
                         </div></td>
@@ -41,14 +41,14 @@
                         1
                         </td>
                         <!-- <td class="col-sm-1 col-md-1 text-center"><strong>1000 </strong></td> -->
-                        <td class="col-sm-1 col-md-1 text-center"><strong>&#x20B9;1000
+                        <td class="col-sm-1 col-md-1 text-center"><strong>&#x20B9;{{row[2]}}
                          </strong></td>
                         <td class="col-sm-1 col-md-1">
                         <a href="/" class="btn btn-danger">
                             <span class="glyphicon glyphicon-remove"></span> Remove
                         </a></td>
                     </tr>
-  
+                    {% endfor %}
                     <tr>
                         <td colspan="4"><h5>Total Quantity</h5></td>
                         <td class="text-right"><h5><strong>1</strong></h5></td>
