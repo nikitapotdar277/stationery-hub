@@ -1,74 +1,93 @@
-from flask import Blueprint,Flask, redirect, url_for, render_template, request, session, flash
-import mysql.connector
-from flask_mail import Mail, Message
-import sys
-from werkzeug.utils import secure_filename
-import base64
-import os
-
-
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password=sys.argv[1],
-  database="miniamazon"
-)
-mycursor = mydb.cursor()
-
-app = Flask(__name__)
-mail = Mail(app)
-
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'stationeryhub123@gmail.com'
-app.config['MAIL_PASSWORD'] = 'snydbmsshub'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app) 
-
-app.config['UPLOAD_FOLDER'] = 'static/image/uploads/'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+from flask import Blueprint, render_template, Flask, session
 
 user = Blueprint("success",__name__,static_folder="static", template_folder="template")
-
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-	
 
 @user.route('/')
 def success():
 	if "name" not in session:
-		flash("Please Login to continue","info")
-		return redirect('/login')
-	else:
-		return render_template('user.html', name = session['name'].lower())
+		return "<h1><center>please login</center></h1>"
+	
+		# try:
 
-@user.route('/lend',methods=['POST'])
-def lend():
-	return render_template("lend.html")
+			sql =f"""select * from items where email not in ('{session["email"]}');"""  #LIKE USED
+			#print(search_item,type(search_item))
+			mycursor.execute(sql)
+			db_search = mycursor.fetchall()
+			#print (db_search)
+			value = {
+			0:"IN STOCK",
+			1:"NOT IN STOCK"
+			}
 
-@user.route('/lenditems',methods=['POST'])
-def lenditems():
+			link,file_name = path_finder()
+			list_ = []
+			fname = []
+			for index,val in enumerate(file_name):
+				for row in db_search:
+					if val in row[-2]:
+						list_.append(link[index])
+						#print(link[index])
+						fname.append(val)
+
+			return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,filename=fname,name=session["name"].lower())
+		#except Exception as e:
+			# print(e)
+			# app.logger.info(f"Exception occured while encountering search :{request.url,e}")
+
+			# return redirect('/somethingwentwrong')
+		#return render_template('user2.html', name = session['name'].lower())
+
+@user.route('/rent',methods=['POST'])
+def rent():
+	return render_template("rent.html")
+
+@user.route('/rentitems',methods=['POST'])
+def rentitems():
 	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
 	price = request.form["price"]
-	item_type = "lend"
+	item_type = "rent"
 	file = request.files['rentitem']
-	
-	if file and allowed_file(file.filename):
-		image = secure_filename(file.filename)
-		file.save(os.path.join(app.config['UPLOAD_FOLDER'], image))
+		
+# select branch,year from registration join items on registration.email = items.email;
 
-	else: 
+
+	insert_success,image = insert_image(file)
+	if not insert_success:
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
-
+		print(request.url)
+		return render_template("rent.html")
 
 	sql = "insert into items(email,item_name,price,item_type,img,sold) values(%s, %s, %s, %s,%s,%s);"
 	val = (email,item_name,price,item_type,image,0)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	return render_template("index.html")
+	flash("You have successfully Inserted The Details!")
+	return redirect("/user")
 
+@user.route('cart/<string:seller_email>/<string:item_name>/<string:image>')
+def Cart(seller_email,item_name,image):
+	try:
+		sql = """insert into cart(product_email,item_name,img,cart_holder) values(%s,%s,%s,%s)"""
+		mycursor.execute(sql, (seller_email, item_name, image,session["email"]))
+		mydb.commit()
+		flash("Insert into cart successfully done")
+		return redirect('/')
+	except :
+		#print("ERRORR")
+		redirect('/somethingwentwrong')
+
+@user.route('cartD/<int:id>',methods=['POST'])
+def CartD(id):
+	try:
+		sql = f"""delete from cart where item_id = {id}"""
+		mycursor.execute(sql)
+		mydb.commit()
+		flash("DELETION successfully done")
+		return redirect('/user/mycart')
+	except :
+		#print("ERRORR")
+		redirect('/somethingwentwrong')
 
 @user.route('/sell',methods=['POST'])
 def sell():
@@ -79,21 +98,22 @@ def sell1():
 	email = session["name"] + "@gmail.com"
 	item_name = request.form["item"]
 	price = request.form["price"]
-	file = request.files['sellitem']
-	
-	if file and allowed_file(file.filename):
-		image = secure_filename(file.filename)
-		file.save(os.path.join(app.config['UPLOAD_FOLDER'], image))
-
-	else: 
+	description=request.form["description"]
+	file = request.files['sellitem'] # name
+	#print(file)
+	insert_success,image = insert_image(file)
+	if not insert_success:
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		print(request.url)
+		return render_template("sell.html")
 	
 	item_type = "sell"
 	sql = "insert into items(email,item_name,price,item_type,img, sold) values(%s, %s, %s, %s, %s, %s);"
 	val = (email,item_name,int(price),item_type,image,0)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	return ('success')
+	flash("You have successfully Inserted The Details!")
+	return redirect("/user")
 
 @user.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
 def order(seller_email, item_name, item_type):
@@ -126,3 +146,101 @@ def order(seller_email, item_name, item_type):
 	buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
 	mail.send(buyer_msg)
 	return('Ordered! Please check your mail')
+
+
+@user.route('/test')
+def test():
+	return render_template("user2.html",name="LOGIN")
+
+@user.route('/product')
+def product():
+	return render_template("product.html")
+
+@user.route('/user3')
+def user3():
+	return render_template("user3.html")
+
+
+
+@user.route('/main')
+def trial():
+	#print(os.getcwd())
+	img_name = ['static/user_pg/image_dy/'+i for i in os.listdir(r"./user/static/user_pg/image_dy/")]
+	#print(img_name)
+	for i in range(len(img_name)):
+		prices.append((i+1)*100)
+		review.append((i+1))
+	return render_template("user1.html",img_name=img_name,prices=prices,review=review,slider=img_name,history=img_name)
+
+	
+@user.route('/wishlist',methods=['GET','POST'])
+def wishlist():
+	return render_template('wishlist.html',name=session["name"])
+
+
+@user.route('/myorders',methods=['POST'])
+def myorders():
+	return render_template('orderHistory.html',title=session["name"])
+
+@user.route('/mycart',methods=['POST'])
+def mycart():
+	sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
+	mycursor.execute(sql)
+	db_search = mycursor.fetchall()
+	#print (db_search)
+	value = {
+			0:"IN STOCK",
+			1:"NOT IN STOCK"
+			}
+
+			# ()
+			# ()
+			# [hello,hi,bye]
+			# index,val
+# 6,7,1,8 --->file_name
+# 1,6,7,8 ---->val
+	link,file_name = path_finder()
+	list_ = []
+	fname = []
+	print("Loop begins")
+
+	print(db_search)
+	#(db_search.sort(key=lambda x:x[-1]))
+	#print(db_search)
+	#file_name
+	# list1, list2 = zip(*sorted(zip(file_name,link)))
+	# print("List1 starts")
+	# print(list1)
+	# print(list2)
+	# print("List2 end")
+
+	# DO NOT TOUCH
+	link = sorted(link, key = lambda x: file_name[link.index(x)])
+	file_name.sort()
+	# DO NOT TOUCH
+	total = 0
+	for index,val in enumerate(file_name):
+		for row in (db_search):
+			if val in row[-2]:
+				list_.append(link[index])
+				print("list--->",link[index])
+				fname.append(val)
+				print("Fname-->",val)
+	print("Loop ends")
+	for i in db_search:
+		total += i[2]
+
+	sql = f""" select count(*) from cart where cart_holder='{session['email']}';"""
+	mycursor.execute(sql)
+	count = int(mycursor.fetchone()[0])
+	return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count)
+		
+	#return render_template('cart.html')
+
+@user.route('/emptyCart',methods=['POST'])
+def emptyCart():
+	sql = """truncate cart;"""
+	mycursor.execute(sql)
+	mydb.commit()
+	return redirect('/user/mycart')
+
