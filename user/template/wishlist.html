@@ -23,7 +23,9 @@
 	<div class="top-nav-bar">
 	<div class="search-box">
 		<h3 class="logo" style="font-family:'Modak', cursive;">StationaryHub</h3>
-		<input type="text" class="form-control">
+		<form action="/search/wishlist" method="POST">
+		<input type="text" class="form-control" name='search_item'>
+		</form>
 		<span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
 	</div>
 	 
@@ -48,10 +50,12 @@
 		<div class="title-box">
 			<h2>Your Wishlist</h2>
 		</div>
+
 		<div class="row">
+			{% for i,row in (db_search) %}
 			<div class="col-md-3">
 				<div class="product-top">
-					<a href="product.html"><img src="static/images/img (8).jpg"></a>
+					<a href="product.html"><img src="/{{list_[i]}}"></a>
 					<div class="overlay-right">
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
@@ -64,12 +68,13 @@
 					<i class="fa fa-star"></i>
 					<i class="fa fa-star"></i>
 					<i class="fa fa-star-half-o"></i>
-					<h3>Product Name</h3>
-					<h5>&#x20B9; 000</h5>
+					<h3>{{row[1]}}</h3>
+					<h5>&#x20B9; {{row[2]}}</h5>
 
 				</div>
 			</div>
-			<div class="col-md-3">
+			{% endfor %}
+			<!-- <div class="col-md-3">
 				<div class="product-top">
 					<img src="static/images/img (12).jpg">
 					<div class="overlay-right">
@@ -129,7 +134,7 @@
 					<h5>&#x20B9; 000</h5>
 
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </section>

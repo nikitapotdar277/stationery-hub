@@ -30,6 +30,61 @@ app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 
 #table -> registration
 
+def search(page,search_item):
+
+		scan = {
+
+		"user": "items",
+		"wishlist" :"wishlist",
+		"cart" :"cart"
+
+		}
+
+		if page == "user":
+			
+			if "name" not in session:
+				sql = f"""select * from {scan[page]} where item_name LIKE %s;"""   #LIKE USED
+				mycursor.execute(sql, ("%" + search_item + "%",))
+				name = "LOGIN"
+			else:
+				sql = f"""select * from {scan[page]} where email not in ('{session["email"]}') and item_name like '%{search_item}%';"""
+				mycursor.execute(sql)
+				name = session["name"]
+		else:
+
+			sql = f"""select {scan[page]}.product_email,{scan[page]}.item_name,items.price,{scan[page]}.img,items.item_type from {scan[page]} join items on {scan[page]}.item_name = items.item_name and cart_holder='{session["email"]}' and {scan[page]}.item_name like '%t%' order by {scan[page]}.img;"""
+			mycursor.execute(sql)
+			name = session["name"]
+			#print(search_item,type(search_item))
+		
+		db_search = mycursor.fetchall()
+		print (db_search)
+		value = {
+		0:"IN STOCK",
+		1:"NOT IN STOCK"
+		}
+
+		link,file_name = path_finder()
+		list_ = []
+
+
+		link = sorted(link, key = lambda x: file_name[link.index(x)])
+		file_name.sort()
+		# DO NOT TOUCH
+		total = 0
+		# fname = []
+		for index,val in enumerate(file_name):
+			for row in (db_search):
+				if val in row[-2]:
+					list_.append(link[index])
+					# print("list--->",link[index])
+					# fname.append(val)
+					# print("Fname-->",val)
+		return db_search,value,list_,name,file_name
+
+
+
+
 
 
 # def order(seller_email, item_name, item_type):
@@ -127,59 +182,26 @@ def logout():
 	session.pop('name', None)
 	return redirect('/home')
 
+@app.route('/search/<string:page>',methods=["POST"])
+def page_search(page):
+	search_item = request.form["search_item"]
+	db_search,value,list_,name,filename = search(page,search_item)
+	return render_template(f'{page}.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=filename)
+	
+
 
 @app.route('/search', methods=['POST'])
-def search():
-	try:
-
+def user_search():
+	#try:
 		search_item = request.form["search_item"]
-		if "name" not in session:
-			sql = "select * from items where item_name LIKE %s and sold = %s;"   #LIKE USED
-			mycursor.execute(sql, ("%" + search_item + "%", 0))
-			name = "LOGIN"
-		else:
-			sql = f"""select * from items where email not in ('{session["email"]}') and item_name like '%{search_item}%' and sold = 0 ;"""
-			mycursor.execute(sql)
-			name = session["name"]
-		#print(search_item,type(search_item))
-		
-		db_search = mycursor.fetchall()
-		print (db_search)
-		value = {
-		0:"IN STOCK",
-		1:"NOT IN STOCK"
-		}
+		db_search,value,list_,name,filename = search("user",search_item)
 
-		link,file_name = path_finder()
-		list_ = []
+		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=filename)
+	# except Exception as e:
+	# 	print(e)
+	# 	app.logger.info(f"Exception occured while encountering search :{request.url,e}")
 
-
-		link = sorted(link, key = lambda x: file_name[link.index(x)])
-		file_name.sort()
-		# DO NOT TOUCH
-		total = 0
-		fname = []
-		for index,val in enumerate(file_name):
-			for row in (db_search):
-				if val in row[-2]:
-					list_.append(link[index])
-					print("list--->",link[index])
-					fname.append(val)
-					print("Fname-->",val)
-
-
-		# for index,val in enumerate(file_name):
-		# 	for row in db_search:
-		# 		if val in row[-2]:
-		# 			list_.append(link[index])
-		# 			print(link[index])
-
-		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=file_name)
-	except Exception as e:
-		print(e)
-		app.logger.info(f"Exception occured while encountering search :{request.url,e}")
-
-		return redirect('/somethingwentwrong')
+	# 	return redirect('/somethingwentwrong')
 
 @app.route('/table')
 def table():

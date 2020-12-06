@@ -303,53 +303,113 @@ def trial():
 
 	
 @user.route('/wishlist',methods=['POST'])
-def wishlist():
-	return render_template('wishlist.html',name=session["name"])
+def liked():
+	if "name" in session:
+		sql = f""" select wishlist.product_email,wishlist.item_name,items.price,wishlist.cart_holder,wishlist.img,wishlist.item_id from wishlist join items on wishlist.img = items.img and wishlist.cart_holder = '{session['email']}' order by wishlist.img;"""
+		mycursor.execute(sql)
+		db_search = mycursor.fetchall()
+		#print (db_search)
+		value = {
+				0:"IN STOCK",
+				1:"NOT IN STOCK"
+				}
+
+		link,file_name = path_finder()
+		list_ = []
+		fname = []
+		print("Loop begins")
+
+		print(db_search)
+
+		# DO NOT TOUCH
+		link = sorted(link, key = lambda x: file_name[link.index(x)])
+		file_name.sort()
+		# DO NOT TOUCH
+		total = 0
+		for index,val in enumerate(file_name):
+			for row in (db_search):
+				if val in row[-2]:
+					list_.append(link[index])
+					print("list--->",link[index])
+					fname.append(val)
+					print("Fname-->",val)
+		print("Loop ends")
+
+		return render_template('wishlist.html', db_search = enumerate(db_search),list_=list_,name=session["name"])
+	else:
+		flash("Please Sign-in to Continue")
+		return redirect('/login')
+
+
+@user.route('wishlist/<string:seller_email>/<string:item_name>/<string:image>')
+def wishlist(seller_email,item_name,image):
+	try:
+
+		sql = """insert into wishlist(product_email,item_name,img,cart_holder) 
+		select * from (SELECT %s,%s,%s,%s) as temp
+		where not exists (
+			select img from wishlist where img = %s
+		) limit 1;"""
+		mycursor.execute(sql, (seller_email, item_name, image,session["email"],image))
+		mydb.commit()
+		flash("Added to the wishlist")
+		return redirect('/')
+	except :
+		#print("ERRORR")
+		redirect('/somethingwentwrong')
+
 
 
 @user.route('/myorders',methods=['POST'])
 def myorders():
-	return render_template('orderHistory.html',title=session["name"])
-
+	if "name" in session:
+		return render_template('orderHistory.html',title=session["name"])
+	else:
+		flash("Please Sign-in to Continue")
+		return redirect('/login')
 @user.route('/mycart',methods=['GET'])
 def mycart():
-	sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
-	mycursor.execute(sql)
-	db_search = mycursor.fetchall()
-	#print (db_search)
-	value = {
-			0:"IN STOCK",
-			1:"NOT IN STOCK"
-			}
+	if "name" not in session:
+		flash("Please Sign-in")
+		return redirect('/login')
+	else:
+		sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
+		mycursor.execute(sql)
+		db_search = mycursor.fetchall()
+		#print (db_search)
+		value = {
+				0:"IN STOCK",
+				1:"NOT IN STOCK"
+				}
 
-	link,file_name = path_finder()
-	list_ = []
-	fname = []
-	print("Loop begins")
+		link,file_name = path_finder()
+		list_ = []
+		fname = []
+		print("Loop begins")
 
-	print(db_search)
+		print(db_search)
 
-	# DO NOT TOUCH
-	link = sorted(link, key = lambda x: file_name[link.index(x)])
-	file_name.sort()
-	# DO NOT TOUCH
-	total = 0
-	for index,val in enumerate(file_name):
-		for row in (db_search):
-			if val in row[-2]:
-				list_.append(link[index])
-				print("list--->",link[index])
-				fname.append(val)
-				print("Fname-->",val)
-	print("Loop ends")
-	for i in db_search:
-		total += i[2]
+		# DO NOT TOUCH
+		link = sorted(link, key = lambda x: file_name[link.index(x)])
+		file_name.sort()
+		# DO NOT TOUCH
+		total = 0
+		for index,val in enumerate(file_name):
+			for row in (db_search):
+				if val in row[-2]:
+					list_.append(link[index])
+					print("list--->",link[index])
+					fname.append(val)
+					print("Fname-->",val)
+		print("Loop ends")
+		for i in db_search:
+			total += i[2]
 
-	sql = f""" select count(*) from cart where cart_holder='{session['email']}';"""
-	mycursor.execute(sql)
-	count = int(mycursor.fetchone()[0])
-	return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count)
-		
+		sql = f""" select count(*) from cart where cart_holder='{session['email']}';"""
+		mycursor.execute(sql)
+		count = int(mycursor.fetchone()[0])
+		return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count)
+			
 
 @user.route('/emptyCart',methods=['POST'])
 def emptyCart():
