@@ -11,7 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-<link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<!-- <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
 		{% block content %}
 			{% with message = get_flashed_messages() %}
 				{% if message %}
@@ -24,10 +25,11 @@
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
-		{% endblock%}
+		{% endblock%} -->
 		
 </head>
 <body>
+	{%include 'messages.html'%}
 <div class="top-nav-bar">
 	<div class="search-box">
 		<i class="fa fa-bars" id="menu-btn" onclick="openmenu()"></i>

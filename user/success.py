@@ -272,7 +272,7 @@ def Cart(seller_email,item_name,image):
 			) limit 1;"""
 			mycursor.execute(sql, (seller_email, item_name, image,session["email"],image,session["email"]))
 			mydb.commit()
-			flash("Insert into cart successfully done")
+			flash("Insert into cart successfully done",category="success")
 			return redirect('/')
 		else:
 			flash('Please Sign-in to Continue')
@@ -287,7 +287,7 @@ def CartD(id):
 		sql = f"""delete from cart where item_id = {id}"""
 		mycursor.execute(sql)
 		mydb.commit()
-		flash("DELETION successfully done")
+		flash("DELETION successfully done",category="success")
 		return redirect('/user/mycart')
 	except:
 		redirect('/somethingwentwrong')
@@ -306,7 +306,7 @@ def sell1():
 	#print(file)
 	insert_success,image = insert_image(file)
 	if not insert_success:
-		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		flash('Allowed image types are -> png, jpg, jpeg, gif',category="danger")
 		print(request.url)
 		return render_template("sell.html")
 	
@@ -315,7 +315,7 @@ def sell1():
 	val = (email,item_name,int(price),item_type,image,0)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	flash("You have successfully Inserted The Details!")
+	flash("You have successfully Inserted The Details!",category="success")
 	return redirect("/user")
 
 @user.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
@@ -408,7 +408,7 @@ def liked():
 
 		return render_template('wishlist.html', db_search = enumerate(db_search),list_=list_,name=session["name"])
 	else:
-		flash("Please Sign-in to Continue")
+		flash("Please Sign-in to Continue",category="danger")
 		return redirect('/login')
 
 
@@ -423,7 +423,7 @@ def wishlist(seller_email,item_name,image):
 		) limit 1;"""
 		mycursor.execute(sql, (seller_email, item_name, image,session["email"],image,session["email"]))
 		mydb.commit()
-		flash("Added to the wishlist")
+		flash("Added to the wishlist",category="success")
 		return redirect('/')
 	except :
 		#print("ERRORR")
@@ -431,17 +431,61 @@ def wishlist(seller_email,item_name,image):
 
 
 
-@user.route('/myorders',methods=['POST'])
+@user.route('/myorders',methods=['GET','POST'])
 def myorders():
 	if "name" in session:
-		return render_template('orderHistory.html',title=session["name"])
+
+		sql = f""" select * from items where email = '{session['email']}' order by img;"""
+		mycursor.execute(sql)
+		db_search = mycursor.fetchall()
+		#print (db_search)
+		value = {
+				0:"IN STOCK",
+				1:"NOT IN STOCK"
+				}
+
+		link,file_name = path_finder()
+		list_ = []
+		fname = []
+		print("Loop begins")
+
+		print(db_search)
+
+		# DO NOT TOUCH
+		link = sorted(link, key = lambda x: file_name[link.index(x)])
+		file_name.sort()
+		# DO NOT TOUCH
+		total = 0
+		for index,val in enumerate(file_name):
+			for row in (db_search):
+				if val in row[-2]:
+					list_.append(link[index])
+					print("list--->",link[index])
+					fname.append(val)
+					print("Fname-->",val)
+		print("Loop ends")
+		for i in db_search:
+			total += i[3]
+
+		sql = f""" select count(*) from items where email='{session['email']}';"""
+		mycursor.execute(sql)
+		count = int(mycursor.fetchone()[0])
+		return render_template('orderHistory.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count,name=session["name"],value=value)
+			
+
+
+
+
+
+
+		# return render_template('orderHistory.html',name=session["name"])
 	else:
-		flash("Please Sign-in to Continue")
+		flash("Please Sign-in to Continue",category="danger")
 		return redirect('/login')
 @user.route('/mycart',methods=['GET'])
 def mycart():
 	if "name" not in session:
-		flash("Please Sign-in")
+		flash("Please Sign-in",category="danger")
 		return redirect('/login')
 	else:
 		sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
@@ -476,7 +520,7 @@ def mycart():
 		for i in db_search:
 			total += i[2]
 
-		sql = f""" select count(*) from cart where cart_holder='{session['email']}';"""
+		sql = f""" select count(*) from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
 		mycursor.execute(sql)
 		count = int(mycursor.fetchone()[0])
 		return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count,name=session["name"])
@@ -502,3 +546,15 @@ def checkout():
 		order(row[0],row[1],"item_type")
 
 	return redirect('/')
+
+@user.route('removeItems/<int:id>',methods=["POST"])
+def itemsD(id):
+	try:
+		sql = f"""delete from items where item_id = {id}"""
+		mycursor.execute(sql)
+		mydb.commit()
+		flash("DELETION successfully done",category="info")
+		return redirect('/user/myorders')
+	except:
+		redirect('/somethingwentwrong')
+

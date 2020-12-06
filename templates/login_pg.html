@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
+
 <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
 		{% block content %}
 			{% with message = get_flashed_messages() %}
@@ -19,9 +20,9 @@
   <meta charset="UTF-8">
   <title>LOGIN</title>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ url_for('static',filename='ummmm.css')}}">
 <link rel="stylesheet" href="{{ url_for('static',filename='login_style.css')}}">
-
 </head>
 <body>
 

@@ -1,20 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head><title>
-	{%block content%}
 	MyOrder
-</title></head>
+</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+   <!--  <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='warning.css')}}">
+        {% block content %}
+            {% with message = get_flashed_messages() %}
+                {% if message %}
+                    {% for msg in message %}
+                    <div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                        <p><center>{{msg}}</p></center>
+  
+</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        {% endblock%} -->
+</head>
 <body>
-	
+	{%include 'messages.html'%}
+	<div class="top-nav-bar">
+    <div class="search-box">
 
-	
+        <h3 class="logo" style="font-family:'Modak', cursive;">StationaryHub</h3>
+       <!--  <form action="/search/cart" method="POST">
+        <input type="text" class="form-control" name='search_item'>
+        </form>
+        <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span> -->
+    </div>
+     
+           
+          
+    <div class="menu-bar">
+    <ul>
+        <li><a href="/">{{name}}</a></li>
 
-
-
-
-
+    </ul>   
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+<div class="container">
+    <div class="row">
+  <p><h2>My Items</h2></p>
+        <div class="col-sm-12">
+    <!-- <form action="/user/emptyCart" method="POST">
+        <button type="submit" id="btnEmpty" class="btn btn-danger">
+                Empty Cart
+        </button>
+    </form> -->
+   
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <!-- <th class="text-center">Unit Price</th> -->
+                        <th class="text-center">Price</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i,row in (db_search) %}
+                    <tr>
+                        <td class="col-sm-8 col-md-6">
+                        <div class="media">
+                            <a class="thumbnail pull-left" href="#"> <img class="media-object" src="/{{list_[i]}}" style="width: 72px; height: 72px;"></a>
+                            <div class="media-body">
+                                <h4 class="media-heading"> <a href="#"> {{row[2]}}</a></h4>
+                                <!-- <h5 class="media-heading"> by <a href="#">{{row[0]}}</a></h5> -->
+                                {%if row[-1] == (1) %}
+                                <span>Status: </span><span class="text-danger"><strong>{{value[row[-1]]}}</strong>
+                                {%else%}
+                                <span>Status: </span><span class="text-success"><strong>{{value[row[-1]]}}</strong>
+                                {%endif%}
+                                </span>
+                            </div>
+                        </div></td>
+                        <td class="col-sm-1 col-md-1" style="text-align: center">
+                        1
+                        </td>
+                        
+                        <!-- <td class="col-sm-1 col-md-1 text-center"><strong>1000 </strong></td> -->
+                        <td class="col-sm-1 col-md-1 text-center"><strong>&#x20B9;{{row[3]}}
+                         </strong></td>
+                        <td class="col-sm-1 col-md-1">
+                        <form action="{{url_for('success.itemsD',id=row[0])}}" method="POST">
+                            <button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove
+                        </td></button>
+                        </form>
+                        
+                            
+                    </tr>
+                    {% endfor %}
+                    <!-- <tr>
+                        <td colspan="4"><h5>Total Quantity</h5></td>
+                        <td class="text-right"><h5><strong>{{count}}</strong></h5></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><h3>Total</h3></td>
+                        <td colspan="2" class="text-right"><h3><strong>&#x20B9;{{total}}</strong></h3></td>
+                    
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                        <form action="/user"><button type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
+                        </button></form>
+                        </td>
+                        <td>
+                        <form action="/user/checkout" method="POST">
+                        <button type="submit" class="btn btn-success">
+                            Checkout <span class="glyphicon glyphicon-play"></span>
+                        </button></td>
+                                
+                            </form> -->
+                    </tr>
+                </tbody>
+            </table>
+  
+        </div>
+    </div>
+</div>
 	{% include 'footer.html'%}
-	{% endblock%}	
+	
 
 
 </body>

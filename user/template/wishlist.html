@@ -55,7 +55,7 @@
 			{% for i,row in (db_search) %}
 			<div class="col-md-3">
 				<div class="product-top">
-					<a href="product.html"><img src="/{{list_[i]}}"></a>
+					<a href="{{url_for('success.product', id=row[-1])}}"><img src="/{{list_[i]}}"></a>
 					<div class="overlay-right">
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>

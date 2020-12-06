@@ -158,7 +158,7 @@ def login():
 				redirect('/somethingwentwrong')
 			db_pass = mycursor.fetchone()
 			if db_pass == None or db_pass[0] != password:
-				flash("User Name or Password INCORRECT!!")
+				flash("User Name or Password INCORRECT!!",category="danger")
 				return redirect('/login')
 			elif db_pass[0] == password:
 				#print("EMAIL ---->",email)
@@ -227,7 +227,7 @@ def register():
 		flag = 1
 		if (request.form["psw"] != request.form["psw-repeat"]) or (len(password)< 8):
 			flag = 0
-			flash("Password should be atleast 8 characters long and both should match")
+			flash("Password should be atleast 8 characters long and both should match",category="danger")
 			return redirect('/register')
 			
 		if ((mycursor.fetchone())== None) and (request.form["psw"] == request.form["psw-repeat"] and flag):
@@ -236,11 +236,11 @@ def register():
 			#print(sql)
 			mycursor.execute(sql,val)
 			mydb.commit()
-			flash("You have successfully registered, Login to countine!") #It shoild be in green color
+			flash("You have successfully registered, Login to countine!",category="success") #It shoild be in green color
 			return redirect("/login")
 
 		else:
-			flash("USERNAME_ already exists please Login")
+			flash("USERNAME already exists please Login",category="danger")
 			return redirect("login")
 	else:
 		return render_template('register.html')
@@ -257,7 +257,7 @@ def lenditems():
 	try:
 		price = int(request.form["price"])
 	except:
-		flash("Price must be a number!!")
+		flash("Price must be a number!!",category="danger")
 		return redirect('/rent')
 		
 	item_type = "lend"
@@ -278,7 +278,7 @@ def sell1():
 	try:
 		price = int(request.form["price"])
 	except:
-		flash("Price must be a number!!")
+		flash("Price must be a number!!",category="danger")
 		return redirect('/sell')
 	item_type = "sell"
 	#print(email,price,item_type,item_name)
