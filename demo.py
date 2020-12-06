@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 import mysql.connector
-from user.success import user,path_finder
+from user.success import user,path_finder,search,order
 from flask_mail import Mail, Message
 import sys
 import os
@@ -18,7 +18,7 @@ mail = Mail(app)
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = os.environ.get("USERNAME")
+app.config['MAIL_USERNAME'] = os.environ.get("USERNAME_")
 app.config['MAIL_PASSWORD'] = os.environ.get("PASSWORD")
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -30,57 +30,57 @@ app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 
 #table -> registration
 
-def search(page,search_item):
+# def search(page,search_item):
 
-		scan = {
+# 		scan = {
 
-		"user": "items",
-		"wishlist" :"wishlist",
-		"cart" :"cart"
+# 		"user": "items",
+# 		"wishlist" :"wishlist",
+# 		"cart" :"cart"
 
-		}
+# 		}
 
-		if page == "user":
+# 		if page == "user":
 			
-			if "name" not in session:
-				sql = f"""select * from {scan[page]} where item_name LIKE %s;"""   #LIKE USED
-				mycursor.execute(sql, ("%" + search_item + "%",))
-				name = "LOGIN"
-			else:
-				sql = f"""select * from {scan[page]} where email not in ('{session["email"]}') and item_name like '%{search_item}%';"""
-				mycursor.execute(sql)
-				name = session["name"]
-		else:
+# 			if "name" not in session:
+# 				sql = f"""select * from {scan[page]} where item_name LIKE %s;"""   #LIKE USED
+# 				mycursor.execute(sql, ("%" + search_item + "%",))
+# 				name = "LOGIN"
+# 			else:
+# 				sql = f"""select * from {scan[page]} where email not in ('{session["email"]}') and item_name like '%{search_item}%';"""
+# 				mycursor.execute(sql)
+# 				name = session["name"]
+# 		else:
 
-			sql = f"""select {scan[page]}.product_email,{scan[page]}.item_name,items.price,{scan[page]}.img,items.item_type from {scan[page]} join items on {scan[page]}.item_name = items.item_name and cart_holder='{session["email"]}' and {scan[page]}.item_name like '%t%' order by {scan[page]}.img;"""
-			mycursor.execute(sql)
-			name = session["name"]
-			#print(search_item,type(search_item))
+# 			sql = f"""select {scan[page]}.product_email,{scan[page]}.item_name,items.price,{scan[page]}.img,{scan[page]}.item_id from {scan[page]} join items on {scan[page]}.item_name = items.item_name and cart_holder='{session["email"]}' and {scan[page]}.item_name like '%t%' order by {scan[page]}.img;"""
+# 			mycursor.execute(sql)
+# 			name = session["name"]
+# 			#print(search_item,type(search_item))
 		
-		db_search = mycursor.fetchall()
-		print (db_search)
-		value = {
-		0:"IN STOCK",
-		1:"NOT IN STOCK"
-		}
+# 		db_search = mycursor.fetchall()
+# 		print (db_search)
+# 		value = {
+# 		0:"IN STOCK",
+# 		1:"NOT IN STOCK"
+# 		}
 
-		link,file_name = path_finder()
-		list_ = []
+# 		link,file_name = path_finder()
+# 		list_ = []
 
 
-		link = sorted(link, key = lambda x: file_name[link.index(x)])
-		file_name.sort()
-		# DO NOT TOUCH
-		total = 0
-		# fname = []
-		for index,val in enumerate(file_name):
-			for row in (db_search):
-				if val in row[-2]:
-					list_.append(link[index])
-					# print("list--->",link[index])
-					# fname.append(val)
-					# print("Fname-->",val)
-		return db_search,value,list_,name,file_name
+# 		link = sorted(link, key = lambda x: file_name[link.index(x)])
+# 		file_name.sort()
+# 		# DO NOT TOUCH
+# 		total = 0
+# 		# fname = []
+# 		for index,val in enumerate(file_name):
+# 			for row in (db_search):
+# 				if val in row[-2]:
+# 					list_.append(link[index])
+# 					# print("list--->",link[index])
+# 					# fname.append(val)
+# 					# print("Fname-->",val)
+# 		return db_search,value,list_,name,file_name
 
 
 
@@ -108,14 +108,14 @@ def search(page,search_item):
 # 		#for emails
 # 		seller_msg = Message(
 # 			'Hello',
-# 			sender=os.environ.get("USERNAME"),
+# 			sender=os.environ.get("USERNAME_"),
 # 			recipients=[seller_email]
 # 		)
 # 		seller_msg.body = 'Hello! the user ' + session["name"] + '@gmail.com needs ' + item_name + '. They\'ll contact you soon. Thank you!'
 # 		mail.send(seller_msg)
 # 		buyer_msg = Message(
 # 			'Hello',
-# 			sender=os.environ.get("USERNAME"),
+# 			sender=os.environ.get("USERNAME_"),
 # 			recipients=[session["name"] + '@gmail.com']
 # 		)
 # 		buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
@@ -185,8 +185,8 @@ def logout():
 @app.route('/search/<string:page>',methods=["POST"])
 def page_search(page):
 	search_item = request.form["search_item"]
-	db_search,value,list_,name,filename = search(page,search_item)
-	return render_template(f'{page}.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=filename)
+	db_search,value,list_,name,filename,total,count = search(page,search_item)
+	return render_template(f'{page}.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=filename,total=total,count=count)
 	
 
 
@@ -194,7 +194,7 @@ def page_search(page):
 def user_search():
 	#try:
 		search_item = request.form["search_item"]
-		db_search,value,list_,name,filename = search("user",search_item)
+		db_search,value,list_,name,filename,total,count = search("user",search_item)
 
 		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=filename)
 	# except Exception as e:
@@ -240,7 +240,7 @@ def register():
 			return redirect("/login")
 
 		else:
-			flash("Username already exists please Login")
+			flash("USERNAME_ already exists please Login")
 			return redirect("login")
 	else:
 		return render_template('register.html')

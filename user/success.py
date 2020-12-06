@@ -20,8 +20,8 @@ mail = Mail(app)
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'stationeryhub123@gmail.com'
-app.config['MAIL_PASSWORD'] = 'snydbmsshub'
+app.config['MAIL_USERNAME'] = os.environ.get("USERNAME_")
+app.config['MAIL_PASSWORD'] = os.environ.get("PASSWORD")
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app) 
@@ -42,7 +42,7 @@ def order(seller_email, item_name, item_type):
 
 	# img = img
 	sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
-	val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
+	val = (session["name"] + "@gmail.com", item_name, int(db_val[3]), seller_email)
 	mycursor.execute(sql2, val)
 	mydb.commit()
 
@@ -52,18 +52,86 @@ def order(seller_email, item_name, item_type):
 
 	seller_msg = Message(
 		'Hello',
-		sender='stationeryhub123@gmail.com',
+		sender=os.environ.get("USERNAME_"),
 		recipients=[seller_email]
 	)
 	seller_msg.body = 'Hello! the user ' + session["name"] + '@gmail.com needs ' + item_name + '. They\'ll contact you soon. Thank you!'
+	print("USERNAME_--->",os.environ.get("USERNAME_"))
+	print(seller_msg.body)
 	mail.send(seller_msg)
 	buyer_msg = Message(
 		'Hello',
-		sender='stationeryhub123@gmail.com',
+		sender= os.environ.get("USERNAME_"),
 		recipients=[session["name"] + '@gmail.com']
 	)
 	buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
+	print(buyer_msg.body)
 	mail.send(buyer_msg)
+
+
+def search(page,search_item):
+
+		scan = {
+
+		"user": "items",
+		"wishlist" :"wishlist",
+		"cart" :"cart"
+
+		}
+
+		total = 0
+		count = 0
+		if page == "user":
+			
+			if "name" not in session:
+				sql = f"""select * from {scan[page]} where item_name LIKE %s;"""   #LIKE USED
+				mycursor.execute(sql, ("%" + search_item + "%",))
+				name = "LOGIN"
+				db_search = mycursor.fetchall()
+			else:
+				sql = f"""select * from {scan[page]} where email not in ('{session["email"]}') and item_name like '%{search_item}%';"""
+				mycursor.execute(sql)
+				name = session["name"]
+				db_search = mycursor.fetchall()
+		else:
+
+			sql = f"""select {scan[page]}.product_email,{scan[page]}.item_name,items.price,{scan[page]}.img,{scan[page]}.item_id from {scan[page]} join items on {scan[page]}.item_name = items.item_name and cart_holder='{session["email"]}' and {scan[page]}.item_name like '%{search_item}%' order by {scan[page]}.img;"""
+			mycursor.execute(sql)
+			name = session["name"]
+			#print(search_item,type(search_item))
+			db_search = mycursor.fetchall()
+			for i in db_search:
+				total += i[2]
+			sql = f""" select count(*) from {scan[page]} join items on {scan[page]}.item_name = items.item_name and cart_holder='{session["email"]}' and {scan[page]}.item_name like '%{search_item}%' order by {scan[page]}.img;"""
+			mycursor.execute(sql)
+			count = int(mycursor.fetchone()[0])
+		
+		
+		# print (db_search)
+		value = {
+		0:"IN STOCK",
+		1:"NOT IN STOCK"
+		}
+
+		link,file_name = path_finder()
+		list_ = []
+
+
+		link = sorted(link, key = lambda x: file_name[link.index(x)])
+		file_name.sort()
+		# DO NOT TOUCH
+		total = 0
+		# fname = []
+		for index,val in enumerate(file_name):
+			for row in (db_search):
+				if val in row[-2]:
+					list_.append(link[index])
+					# print("list--->",link[index])
+					# fname.append(val)
+					# print("Fname-->",val)
+
+		return db_search,value,list_,name,file_name,total,count
+
 
 
 
@@ -196,19 +264,22 @@ def Cart(seller_email,item_name,image):
 #     SELECT name FROM table_listnames WHERE name = 'Rupert'
 # ) LIMIT 1;
 
-
-		sql = """insert into cart(product_email,item_name,img,cart_holder) 
-		select * from (SELECT %s,%s,%s,%s) as temp
-		where not exists (
-			select img from cart where img = %s
-		) limit 1;"""
-		mycursor.execute(sql, (seller_email, item_name, image,session["email"],image))
-		mydb.commit()
-		flash("Insert into cart successfully done")
-		return redirect('/')
+		if "name" in session:
+			sql = """insert into cart(product_email,item_name,img,cart_holder) 
+			select * from (SELECT %s,%s,%s,%s) as temp
+			where not exists (
+				select img,cart_holder from cart where img = %s and cart_holder = %s
+			) limit 1;"""
+			mycursor.execute(sql, (seller_email, item_name, image,session["email"],image,session["email"]))
+			mydb.commit()
+			flash("Insert into cart successfully done")
+			return redirect('/')
+		else:
+			flash('Please Sign-in to Continue')
+			return redirect('/login')
 	except :
 		#print("ERRORR")
-		redirect('/somethingwentwrong')
+		return redirect('/somethingwentwrong')
 
 @user.route('cartD/<int:id>',methods=['POST'])
 def CartD(id):
@@ -348,9 +419,9 @@ def wishlist(seller_email,item_name,image):
 		sql = """insert into wishlist(product_email,item_name,img,cart_holder) 
 		select * from (SELECT %s,%s,%s,%s) as temp
 		where not exists (
-			select img from wishlist where img = %s
+		select img,cart_holder from wishlist where img = %s and cart_holder = %s
 		) limit 1;"""
-		mycursor.execute(sql, (seller_email, item_name, image,session["email"],image))
+		mycursor.execute(sql, (seller_email, item_name, image,session["email"],image,session["email"]))
 		mydb.commit()
 		flash("Added to the wishlist")
 		return redirect('/')
@@ -408,7 +479,7 @@ def mycart():
 		sql = f""" select count(*) from cart where cart_holder='{session['email']}';"""
 		mycursor.execute(sql)
 		count = int(mycursor.fetchone()[0])
-		return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count)
+		return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count,name=session["name"])
 			
 
 @user.route('/emptyCart',methods=['POST'])
@@ -424,6 +495,7 @@ def checkout():
 	mycursor.execute(sql)
 	db_search = mycursor.fetchall()
 	#0 seller 3 buyer
+	print(db_search)
 	seller,buyer = [],[]
 	for row in db_search:
 		
