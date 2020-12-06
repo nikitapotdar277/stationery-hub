@@ -18,8 +18,8 @@ mail = Mail(app)
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'stationeryhub123@gmail.com'
-app.config['MAIL_PASSWORD'] = 'snydbmsshub'
+app.config['MAIL_USERNAME'] = os.environ.get("USERNAME")
+app.config['MAIL_PASSWORD'] = os.environ.get("PASSWORD")
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app) 
@@ -32,7 +32,42 @@ app.secret_key = "alsdkjfoinmxsfcdklahfoaasdfkajsdfsdvksdjhfahgudsgkjhuoagh"
 
 
 
+# def order(seller_email, item_name, item_type):
+# 	sql1 = "select * from items where email = %s and item_name = %s;"
+# 	try:
+# 		mycursor.execute(sql1, (seller_email, item_name))
+# 		db_val = mycursor.fetchone()
 
+
+# 		# for for emails
+# 		sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
+# 		val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
+# 		mycursor.execute(sql2, val)
+# 		mydb.commit()
+
+# 		#change stat to 1 fro all 
+# 		sql3 = "update items set sold = 1 where email = %s and item_name = %s;"
+# 		mycursor.execute(sql3, (seller_email, item_name))
+# 		mydb.commit()
+
+# 		#for emails
+# 		seller_msg = Message(
+# 			'Hello',
+# 			sender=os.environ.get("USERNAME"),
+# 			recipients=[seller_email]
+# 		)
+# 		seller_msg.body = 'Hello! the user ' + session["name"] + '@gmail.com needs ' + item_name + '. They\'ll contact you soon. Thank you!'
+# 		mail.send(seller_msg)
+# 		buyer_msg = Message(
+# 			'Hello',
+# 			sender=os.environ.get("USERNAME"),
+# 			recipients=[session["name"] + '@gmail.com']
+# 		)
+# 		buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
+# 		mail.send(buyer_msg)
+# 	except :
+# 		flash("Somthing Went Wrong")
+# 		return redirect('/')
 
 
 
@@ -117,11 +152,27 @@ def search():
 
 		link,file_name = path_finder()
 		list_ = []
+
+
+		link = sorted(link, key = lambda x: file_name[link.index(x)])
+		file_name.sort()
+		# DO NOT TOUCH
+		total = 0
+		fname = []
 		for index,val in enumerate(file_name):
-			for row in db_search:
+			for row in (db_search):
 				if val in row[-2]:
 					list_.append(link[index])
-					print(link[index])
+					print("list--->",link[index])
+					fname.append(val)
+					print("Fname-->",val)
+
+
+		# for index,val in enumerate(file_name):
+		# 	for row in db_search:
+		# 		if val in row[-2]:
+		# 			list_.append(link[index])
+		# 			print(link[index])
 
 		return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=file_name)
 	except Exception as e:
@@ -215,46 +266,16 @@ def sell1():
 	mydb.commit()
 	return render_template("user.html")
 
-@app.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
-def order(seller_email, item_name, item_type):
-	sql1 = "select * from items where email = %s and item_name = %s and item_type = %s;"
-	try:
-		mycursor.execute(sql1, (seller_email, item_name, item_type))
-		db_val = mycursor.fetchone()
+# @app.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
+# def ord(seller_email,item_name,item_type):
+# 	try:
 
-
-		# for for emails
-		sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
-		val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
-		mycursor.execute(sql2, val)
-		mydb.commit()
-
-		#change stat to 1 fro all 
-		sql3 = "update items set sold = 1 where email = %s and item_name = %s and item_type = %s;"
-		mycursor.execute(sql3, (seller_email, item_name, item_type))
-		mydb.commit()
-
-		#for emails
-		seller_msg = Message(
-			'Hello',
-			sender='stationeryhub123@gmail.com',
-			recipients=[seller_email]
-		)
-		seller_msg.body = 'Hello! the user ' + session["name"] + '@gmail.com needs ' + item_name + '. They\'ll contact you soon. Thank you!'
-		mail.send(seller_msg)
-		buyer_msg = Message(
-			'Hello',
-			sender='stationeryhub123@gmail.com',
-			recipients=[session["name"] + '@gmail.com']
-		)
-		buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
-		mail.send(buyer_msg)
-		return('Ordered! Please check your mail')
-	except Exception as e:
-		#print("Exception:",e)
-		app.logger.info(f"Exception occured while ORDER :{request.url,e}")
-		flash('Login to Place the Order')
-		return redirect('/login')
+# 		return('Ordered! Please check your mail')
+# 	except Exception as e:
+# 		#print("Exception:",e)
+# 		app.logger.info(f"Exception occured while ORDER :{request.url,e}")
+# 		flash('Login to Place the Order')
+# 		return redirect('/login')
 
 @app.route('/')
 def home():

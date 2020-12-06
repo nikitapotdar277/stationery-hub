@@ -35,7 +35,7 @@
 
 
 
-		<h3 class="logo" style="font-family:'Modak', cursive;">StationaryHub</h3>
+		<h3 class="logo" style="font-family:'Modak', cursive;">StationeryHub</h3>
 		<form action="/search" method="POST">
 		<input type="text" class="form-control" name='search_item'>
 		</form>
@@ -65,35 +65,18 @@
 			<form action="/user/rent" method="POST">
 				<input type="submit" class="btn btn-outline-light " value="Rent" style="margin-top: 10px;margin-bottom: 10px;margin-right:0;width:63%">
 				
-			</form>
+			<!-- </form>
 			<form action="/user/wishlist" method="POST">
 				<input type="submit" class="btn btn-outline-light " value="Wishlist" style="margin-top: 10px;margin-bottom: 10px;margin-right:0;width:63%">
 				
-			</form>
-			<form action="/user/myorders" method="POST">
+			</form> -->
+			<!-- <form action="/user/myorders" method="POST">
 				<input type="submit" class="btn btn-outline-light "  value="MyOrder" style="margin-top: 10px;margin-bottom: 10px;width:63%">
-			</form>
-
-			<!-- Example single danger button -->
-			<div class="btn-group">
-				<!-- <input type="submit" class="btn btn-outline-light " value="Wishlist" style="margin-top: 10px;margin-bottom: 10px;margin-right:0;width:63%"> -->
-  				<button type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-top: 10px;margin-bottom:10px; width:85px;">Sort
-  				</button>
-  				<div class="dropdown-menu">
-    				<a class="dropdown-item"><button class="btn btn-outline-dark" style="margin-top: 10px;margin-bottom: 10px;width:85px;">By Name</button></a>
-    				<a class="dropdown-item"><button class="btn btn-outline-dark" style="margin-top: 10px;margin-bottom: 10px;width:85px;">By Price</button></a>
-    
-  				</div>
-</div>
+			</form> -->
 
 			<form action="/logout">
 				<input type="submit" class="btn btn-outline-light "  value="LogOut"style="margin-top: 10px;margin-bottom: 10px;margin-right:0;text-align: center;width:63%">
-			</form>
-				
-				
-
-				
-			
+			</form>		
 		</ul>
 	</div>
 	<div class="slider">
@@ -152,12 +135,12 @@
 		{% for i,row in (db_search) %}
 			<div class="col-md-3">
 				<div class="product-top">
-					<a href="{{url_for('success.product', id=row[0])}}"><img src="/{{list_[i]}}" height="180px" width="210px"></a>
+					<a href="product"><img src="/{{list_[i]}}" height="180px" width="210px"></a>
 					<div class="overlay-right">
-						<form action="/">
+						<!-- <form action="/">
 						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i></form>
-						</button>
+						</button> -->
 						<form action="{{url_for('success.Cart', seller_email = row[1], item_name = row[2], image = filename[i])}}">
 						<button type="submit" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
@@ -263,10 +246,10 @@
 				<div class="product-top">
 					<a href="product.html"><img src="static/images/img (8).jpg"></a>
 					<div class="overlay-right">
-						
+<!-- 						
 						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i>
-						</button>
+						</button> -->
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>
@@ -287,10 +270,10 @@
 				<div class="product-top">
 					<img src="static/images/img (12).jpg">
 					<div class="overlay-right">
-						
+<!-- 						
 						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i>
-						</button>
+						</button> -->
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>
@@ -311,10 +294,10 @@
 				<div class="product-top">
 					<img src="static/images/img (10).jpg">
 					<div class="overlay-right">
-						
+<!-- 						
 						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i>
-						</button>
+						</button> -->
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>
@@ -335,10 +318,10 @@
 				<div class="product-top">
 					<img src="static/images/img (11).jpg">
 					<div class="overlay-right">
-						
+<!-- 						
 						<button type="button" class="btn btn-secondary" title="Add to Wishlist">
 							<i class="fa fa-heart"></i>
-						</button>
+						</button> -->
 						<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>

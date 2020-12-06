@@ -34,10 +34,43 @@ user = Blueprint("success",__name__,static_folder="static", template_folder="tem
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+def order(seller_email, item_name, item_type):
+	sql1 = "select * from items where email = %s and item_name = %s;"
+	mycursor.execute(sql1, (seller_email, item_name))
+	db_val = mycursor.fetchone()
+
+	# img = img
+	sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
+	val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
+	mycursor.execute(sql2, val)
+	mydb.commit()
+
+	sql3 = "update items set sold = 1 where email = %s and item_name = %s;"
+	mycursor.execute(sql3, (seller_email, item_name))
+	mydb.commit()
+
+	seller_msg = Message(
+		'Hello',
+		sender='stationeryhub123@gmail.com',
+		recipients=[seller_email]
+	)
+	seller_msg.body = 'Hello! the user ' + session["name"] + '@gmail.com needs ' + item_name + '. They\'ll contact you soon. Thank you!'
+	mail.send(seller_msg)
+	buyer_msg = Message(
+		'Hello',
+		sender='stationeryhub123@gmail.com',
+		recipients=[session["name"] + '@gmail.com']
+	)
+	buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
+	mail.send(buyer_msg)
+
+
+
 def path_finder():
 	paths = []
 	
-	for i,j,k in os.walk(r"C:\Users\College\Documents\GitHub\dbms\static\image\uploads" ):
+	for i,j,k in os.walk(os.environ.get('MINIAMAZONPATH')):
 		
 		if k != []:
 			paths.append([(i+'\\'+file) for file in k])
@@ -94,12 +127,28 @@ def success():
 			link,file_name = path_finder()
 			list_ = []
 			fname = []
+
+
+			link = sorted(link, key = lambda x: file_name[link.index(x)])
+			file_name.sort()
+			# DO NOT TOUCH
+			total = 0
 			for index,val in enumerate(file_name):
-				for row in db_search:
+				for row in (db_search):
 					if val in row[-2]:
 						list_.append(link[index])
-						#print(link[index])
+						print("list--->",link[index])
 						fname.append(val)
+						print("Fname-->",val)
+
+
+
+			# for index,val in enumerate(file_name):
+			# 	for row in db_search:
+			# 		if val in row[-2]:
+			# 			list_.append(link[index])
+			# 			#print(link[index])
+			# 			fname.append(val)
 
 			return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,filename=fname,name=session["name"].lower())
 		#except Exception as e:
@@ -140,8 +189,20 @@ def rentitems():
 @user.route('cart/<string:seller_email>/<string:item_name>/<string:image>')
 def Cart(seller_email,item_name,image):
 	try:
-		sql = """insert into cart(product_email,item_name,img,cart_holder) values(%s,%s,%s,%s)"""
-		mycursor.execute(sql, (seller_email, item_name, image,session["email"]))
+
+# 		INSERT INTO table_listnames (name, address, tele)
+# SELECT * FROM (SELECT 'Rupert', 'Somewhere', '022') AS tmp
+# WHERE NOT EXISTS (
+#     SELECT name FROM table_listnames WHERE name = 'Rupert'
+# ) LIMIT 1;
+
+
+		sql = """insert into cart(product_email,item_name,img,cart_holder) 
+		select * from (SELECT %s,%s,%s,%s) as temp
+		where not exists (
+			select img from cart where img = %s
+		) limit 1;"""
+		mycursor.execute(sql, (seller_email, item_name, image,session["email"],image))
 		mydb.commit()
 		flash("Insert into cart successfully done")
 		return redirect('/')
@@ -157,8 +218,7 @@ def CartD(id):
 		mydb.commit()
 		flash("DELETION successfully done")
 		return redirect('/user/mycart')
-	except :
-		#print("ERRORR")
+	except:
 		redirect('/somethingwentwrong')
 
 @user.route('/sell',methods=['POST'])
@@ -188,35 +248,8 @@ def sell1():
 	return redirect("/user")
 
 @user.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
-def order(seller_email, item_name, item_type):
-	sql1 = "select * from items where email = %s and item_name = %s and item_type = %s;"
-	mycursor.execute(sql1, (seller_email, item_name, item_type))
-	db_val = mycursor.fetchone()
-
-	# img = img
-	sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
-	val = (session["name"] + "@gmail.com", item_name, db_val[3], seller_email)
-	mycursor.execute(sql2, val)
-	mydb.commit()
-
-	sql3 = "update items set sold = 1 where email = %s and item_name = %s and item_type = %s;"
-	mycursor.execute(sql3, (seller_email, item_name, item_type))
-	mydb.commit()
-
-	seller_msg = Message(
-		'Hello',
-		sender='stationeryhub123@gmail.com',
-		recipients=[seller_email]
-	)
-	seller_msg.body = 'Hello! the user ' + session["name"] + '@gmail.com needs ' + item_name + '. They\'ll contact you soon. Thank you!'
-	mail.send(seller_msg)
-	buyer_msg = Message(
-		'Hello',
-		sender='stationeryhub123@gmail.com',
-		recipients=[session["name"] + '@gmail.com']
-	)
-	buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
-	mail.send(buyer_msg)
+def ord(seller_email,item_name,item_type):
+	order(seller_email,item_name,"item_type")
 	return('Ordered! Please check your mail')
 
 
@@ -224,9 +257,33 @@ def order(seller_email, item_name, item_type):
 def test():
 	return render_template("user2.html",name="LOGIN")
 
-@user.route('/product')
-def product():
-	return render_template("product.html")
+# @user.route('/product')
+# def product():
+# 	return render_template("product.html")
+
+@user.route('product/<int:id>')
+def product(id):
+	# try:
+		sql = """select * from items where item_id = %s;"""
+		mycursor.execute(sql,(int(id),))
+		db_search = mycursor.fetchone()
+		print(db_search)
+		stock = {
+		0 : "In stock",
+		1 : "Sold"
+		}
+		img = ''
+		link,file_name = path_finder()
+		for i,file in enumerate(file_name):
+			if file == db_search[-2]:
+				img = link[i]
+				break
+		return render_template('product.html',database=db_search,stock=stock,img=img)
+	# except Exception as e :
+	# 	#print("ERRORR")
+	# 	return redirect('/somethingwentwrong')
+
+
 
 @user.route('/user3')
 def user3():
@@ -254,7 +311,7 @@ def wishlist():
 def myorders():
 	return render_template('orderHistory.html',title=session["name"])
 
-@user.route('/mycart',methods=['POST'])
+@user.route('/mycart',methods=['GET'])
 def mycart():
 	sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
 	mycursor.execute(sql)
@@ -265,26 +322,12 @@ def mycart():
 			1:"NOT IN STOCK"
 			}
 
-			# ()
-			# ()
-			# [hello,hi,bye]
-			# index,val
-# 6,7,1,8 --->file_name
-# 1,6,7,8 ---->val
 	link,file_name = path_finder()
 	list_ = []
 	fname = []
 	print("Loop begins")
 
 	print(db_search)
-	#(db_search.sort(key=lambda x:x[-1]))
-	#print(db_search)
-	#file_name
-	# list1, list2 = zip(*sorted(zip(file_name,link)))
-	# print("List1 starts")
-	# print(list1)
-	# print(list2)
-	# print("List2 end")
 
 	# DO NOT TOUCH
 	link = sorted(link, key = lambda x: file_name[link.index(x)])
@@ -307,7 +350,6 @@ def mycart():
 	count = int(mycursor.fetchone()[0])
 	return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count)
 		
-	#return render_template('cart.html')
 
 @user.route('/emptyCart',methods=['POST'])
 def emptyCart():
@@ -315,3 +357,16 @@ def emptyCart():
 	mycursor.execute(sql)
 	mydb.commit()
 	return redirect('/user/mycart')
+
+@user.route('/checkout',methods=["POST"])
+def checkout():
+	sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
+	mycursor.execute(sql)
+	db_search = mycursor.fetchall()
+	#0 seller 3 buyer
+	seller,buyer = [],[]
+	for row in db_search:
+		
+		order(row[0],row[1],"item_type")
+
+	return redirect('/')
