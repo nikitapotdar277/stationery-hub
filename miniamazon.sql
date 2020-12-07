@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.21, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: localhost    Database: miniamazon
 -- ------------------------------------------------------
--- Server version	8.0.21
+-- Server version	8.0.22
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,7 +29,7 @@ CREATE TABLE `cart` (
   `img` varchar(20) DEFAULT NULL,
   `cart_holder` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,35 +38,8 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
-INSERT INTO `cart` VALUES (1,'yelaiyugandhar@gmail.com','ciso drafter','7.jpg','nikita.potdar15@gmail.com'),(6,'yelaiyugandhar@gmail.com','book sepm','4.jpg','sakship1920@gmail.com'),(7,'sakship1920@gmail.com','big drafter','6.jpg','yelaiyugandhar@gmail.com'),(8,'sakship1920@gmail.com','trial','7.jpg','yelaiyugandhar@gmail.com'),(9,'yelaiyugandhar@gmail.com','yugandhar','8.jpg','nikita.potdar15@gmail.com'),(10,'yelaiyugandhar@gmail.com','cello drafter','7.jpg','sakship1920@gmail.com');
+INSERT INTO `cart` VALUES (1,'yelaiyugandhar@gmail.com','metal clip','1.jpg','nikita.potdar15@gmail.com'),(2,'nikita.potdar15@gmail.com','bag','2.jpg','sakship1920@gmail.com'),(3,'nikita.potdar15@gmail.com','book','3.jpg','sakship1920@gmail.com');
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `extrathings`
---
-
-DROP TABLE IF EXISTS `extrathings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `extrathings` (
-  `desc_id` int NOT NULL AUTO_INCREMENT,
-  `ranking` int DEFAULT NULL,
-  `description` varchar(200) DEFAULT NULL,
-  `item_id` int DEFAULT NULL,
-  PRIMARY KEY (`desc_id`),
-  KEY `item_id` (`item_id`),
-  CONSTRAINT `extrathings_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `items` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `extrathings`
---
-
-LOCK TABLES `extrathings` WRITE;
-/*!40000 ALTER TABLE `extrathings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `extrathings` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -85,7 +58,7 @@ CREATE TABLE `items` (
   `img` varchar(50) NOT NULL,
   `sold` tinyint(1) NOT NULL,
   PRIMARY KEY (`item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +67,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES (1,'yelaiyugandhar@gmail.com','drafter',10,'sell','1.jpg',0),(2,'yelaiyugandhar@gmail.com','ciso drafter',20,'sell','2.jpg',0),(3,'yelaiyugandhar@gmail.com','cello drafter',40,'sell','3.jpg',0),(4,'yelaiyugandhar@gmail.com','book sepm',200,'sell','4.jpg',0),(5,'yelaiyugandhar@gmail.com','toc book',150,'sell','5.jpg',0),(6,'sakship1920@gmail.com','big drafter',200,'sell','6.jpg',0),(7,'sakship1920@gmail.com','trial',20,'sell','7.jpg',0),(8,'yelaiyugandhar@gmail.com','yugandhar',0,'sell','8.jpg',0);
+INSERT INTO `items` VALUES (1,'yelaiyugandhar@gmail.com','metal clip',30,'sell','1.jpg',0),(2,'nikita.potdar15@gmail.com','bag',100,'rent','2.jpg',1),(3,'nikita.potdar15@gmail.com','book',200,'rent','3.jpg',1);
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +85,7 @@ CREATE TABLE `orders` (
   `price` float NOT NULL,
   `seller` varchar(50) NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +94,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,'nikita.potdar008@gmail.com','drafter',0,'nikita.potdar15@gmail.com'),(2,'nikita.potdar008@gmail.com','drafter',0,'nikita.potdar15@gmail.com'),(3,'nikita.potdar008@gmail.com','drafter',0,'nikita.potdar15@gmail.com'),(4,'nikita.potdar008@gmail.com','drafter',0,'nikita.potdar15@gmail.com'),(5,'nikita.potdar008@gmail.com','drafter',0,'nikita.potdar15@gmail.com'),(6,'nikita.potdar008@gmail.com','drafter',0,'nikita.potdar15@gmail.com');
+INSERT INTO `orders` VALUES (1,'sakship1920@gmail.com','bag',100,'nikita.potdar15@gmail.com'),(2,'sakship1920@gmail.com','book',200,'nikita.potdar15@gmail.com');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,6 +124,33 @@ LOCK TABLES `registration` WRITE;
 INSERT INTO `registration` VALUES ('yelaiyugandhar@gmail.com','Computer','TE','pass',1),('sakship1920@gmail.com','Computer','TE','ppp',3),('nikita.potdar15@gmail.com','Computer','TE','1234',4),('123@123.com','Mechanical','TE','1111',5),('nikita.potdar008@gmail.com','Computer','TE','0000',6),('test@gmail.com','It','FE','password123',7),('hello@gmail.com','IT','SE','helloworld',8);
 /*!40000 ALTER TABLE `registration` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `wishlist`
+--
+
+DROP TABLE IF EXISTS `wishlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `wishlist` (
+  `item_id` int NOT NULL AUTO_INCREMENT,
+  `product_email` varchar(80) DEFAULT NULL,
+  `item_name` varchar(80) DEFAULT NULL,
+  `img` varchar(20) DEFAULT NULL,
+  `cart_holder` varchar(80) DEFAULT NULL,
+  PRIMARY KEY (`item_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `wishlist`
+--
+
+LOCK TABLES `wishlist` WRITE;
+/*!40000 ALTER TABLE `wishlist` DISABLE KEYS */;
+INSERT INTO `wishlist` VALUES (1,'yelaiyugandhar@gmail.com','metal clip','1.jpg','nikita.potdar15@gmail.com'),(2,'yelaiyugandhar@gmail.com','metal clip','1.jpg','sakship1920@gmail.com'),(3,'nikita.potdar15@gmail.com','bag','2.jpg','sakship1920@gmail.com');
+/*!40000 ALTER TABLE `wishlist` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -161,4 +161,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-04 23:06:18
+-- Dump completed on 2020-12-07 14:38:59
