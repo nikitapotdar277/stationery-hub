@@ -73,19 +73,22 @@
 				
 			</form>
 			<form action="/user/myorders" method="POST">
-				<input type="submit" class="btn btn-outline-light "  value="MyOrder" style="margin-top: 10px;margin-bottom: 10px;width:63%">
+				<input type="submit" class="btn btn-outline-light "  value="MyItem" style="margin-top: 10px;margin-bottom: 10px;width:63%">
 			</form>
 
 			<!-- Example single danger button -->
 			<div class="btn-group">
 				<!-- <input type="submit" class="btn btn-outline-light " value="Wishlist" style="margin-top: 10px;margin-bottom: 10px;margin-right:0;width:63%"> -->
-  				<button type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-top: 10px;margin-bottom:10px; width:85px;">Sort
-  				</button>
-  				<div class="dropdown-menu">
-    				<a class="dropdown-item"><button class="btn btn-outline-dark" style="margin-top: 10px;margin-bottom: 10px;width:85px;">By Name</button></a>
-    				<a class="dropdown-item"><button class="btn btn-outline-dark" style="margin-top: 10px;margin-bottom: 10px;width:85px;">By Price</button></a>
+  				<!-- <button type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-top: 10px;margin-bottom:10px; width:85px;">Sort
+  				</button> -->
+  				<!-- <div class="dropdown-menu"> -->
+  					<!-- <form action="/search" method="POST">
+    				<a class="dropdown-item"><button class="btn btn-outline-dark" type="submit" style="margin-top: 10px;margin-bottom: 10px;width:85px;">new to old</button></a>
+  						
+  					</form>
+ -->    				<!-- <a class="dropdown-item"><button class="btn btn-outline-dark" style="margin-top: 10px;margin-bottom: 10px;width:85px;">By Price</button></a> -->
     
-  				</div>
+  				<!-- </div> -->
 </div>
 
 			<form action="/logout">
@@ -161,6 +164,7 @@
 							<i class="fa fa-heart"></i></form>
 						</button>
 						<form action="{{url_for('success.Cart', seller_email = row[1], item_name = row[2], image = filename[i])}}">
+							{%print(filename[i])%}
 						<button type="submit" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button></form>

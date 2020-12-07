@@ -40,36 +40,40 @@ def order(seller_email, item_name, item_type):
 	mycursor.execute(sql1, (seller_email, item_name))
 	db_val = mycursor.fetchone()
 
-	# img = img
-	sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
-	val = (session["name"] + "@gmail.com", item_name, int(db_val[3]), seller_email)
-	mycursor.execute(sql2, val)
-	mydb.commit()
+	if int(db_val[-1]) == 0:
+		sql2 = "insert into orders(email, item_name, price, seller) values (%s, %s, %s, %s);"
+		val = (session["name"] + "@gmail.com", item_name, int(db_val[3]), seller_email)
+		mycursor.execute(sql2, val)
+		mydb.commit()
 
-	sql3 = "update items set sold = 1 where email = %s and item_name = %s;"
-	mycursor.execute(sql3, (seller_email, item_name))
-	mydb.commit()
+		sql3 = "update items set sold = 1 where email = %s and item_name = %s;"
+		mycursor.execute(sql3, (seller_email, item_name))
+		mydb.commit()
 
-	seller_msg = Message(
-		'Hello',
-		sender=os.environ.get("USERNAME_"),
-		recipients=[seller_email]
-	)
-	seller_msg.body = 'Hello! the user ' + session["name"] + '@gmail.com needs ' + item_name + '. They\'ll contact you soon. Thank you!'
-	print("USERNAME_--->",os.environ.get("USERNAME_"))
-	print(seller_msg.body)
-	mail.send(seller_msg)
-	buyer_msg = Message(
-		'Hello',
-		sender= os.environ.get("USERNAME_"),
-		recipients=[session["name"] + '@gmail.com']
-	)
-	buyer_msg.body = 'Hello! the user ' + seller_email + '@gmail.com has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
-	print(buyer_msg.body)
-	mail.send(buyer_msg)
+		seller_msg = Message(
+			'Hello',
+			sender=os.environ.get("USERNAME_"),
+			recipients=[seller_email]
+		)
+		seller_msg.body = 'Hello! the user ' + session["email"] + ' needs ' + item_name + '. They\'ll contact you soon. Thank you!'
+		print("USERNAME_--->",os.environ.get("USERNAME_"))
+		print(seller_msg.body)
+		mail.send(seller_msg)
+		buyer_msg = Message(
+			'Hello',
+			sender= os.environ.get("USERNAME_"),
+			recipients=[session["name"] + '@gmail.com']
+		)
+		buyer_msg.body = 'Hello!, the user ' + seller_email +  ' has been notified about your stationery needs. You may contact them on the above email id. Thank you!'
+		print(buyer_msg.body)
+		mail.send(buyer_msg)
+		return 1
+	else:
+		flash(f"Sorry The product {item_name} Is out of stock",category="danger")
+		return 0
 
-
-def search(page,search_item):
+# @user.route('/search/<string:page>/<string:search_item>/<int:sort>',methods=['GET',"POST"])
+def search(page,search_item,sort=0):
 
 		scan = {
 
@@ -78,7 +82,15 @@ def search(page,search_item):
 		"cart" :"cart"
 
 		}
+		link,file_name = path_finder()
+		list_ = []
 
+		value = {
+		0:"IN STOCK",
+		1:"OUT OF STOCK"
+		}
+		link = sorted(link, key = lambda x: file_name[link.index(x)])
+		file_name.sort()
 		total = 0
 		count = 0
 		if page == "user":
@@ -88,14 +100,24 @@ def search(page,search_item):
 				mycursor.execute(sql, ("%" + search_item + "%",))
 				name = "LOGIN"
 				db_search = mycursor.fetchall()
+				for index,val in enumerate(file_name):
+					for row in (db_search):
+						if val in row[5]:
+							list_.append(link[index])
+
 			else:
 				sql = f"""select * from {scan[page]} where email not in ('{session["email"]}') and item_name like '%{search_item}%';"""
 				mycursor.execute(sql)
 				name = session["name"]
 				db_search = mycursor.fetchall()
+				for index,val in enumerate(file_name):
+					for row in (db_search):
+						if val in row[5]:
+							list_.append(link[index])
 		else:
-
-			sql = f"""select {scan[page]}.product_email,{scan[page]}.item_name,items.price,{scan[page]}.img,{scan[page]}.item_id from {scan[page]} join items on {scan[page]}.item_name = items.item_name and cart_holder='{session["email"]}' and {scan[page]}.item_name like '%{search_item}%' order by {scan[page]}.img;"""
+			sql = f""" select {scan[page]}.product_email,{scan[page]}.item_name,items.price,{scan[page]}.cart_holder,{scan[page]}.img,items.sold,items.item_id,{scan[page]}.item_id from {scan[page]} join items on {scan[page]}.img = items.img and {scan[page]}.cart_holder = '{session['email']}' and {scan[page]}.item_name like '%{search_item}%' order by {scan[page]}.img;"""
+		
+			# sql = f"""select {scan[page]}.product_email,{scan[page]}.item_name,items.price,{scan[page]}.img,items.sold,items.item_id from {scan[page]} join items on {scan[page]}.img = items.img and {scan[page]}_holder='{session["email"]}' and {scan[page]}.item_name like '%{search_item}%' order by {scan[page]}.img;"""
 			mycursor.execute(sql)
 			name = session["name"]
 			#print(search_item,type(search_item))
@@ -107,32 +129,29 @@ def search(page,search_item):
 			count = int(mycursor.fetchone()[0])
 		
 		
-		# print (db_search)
-		value = {
-		0:"IN STOCK",
-		1:"NOT IN STOCK"
-		}
+			print ("Search->",db_search)
 
-		link,file_name = path_finder()
-		list_ = []
+			for index,val in enumerate(file_name):
+				for row in (db_search):
+					if val in row[4]:
+						list_.append(link[index])
 
-
-		link = sorted(link, key = lambda x: file_name[link.index(x)])
-		file_name.sort()
-		# DO NOT TOUCH
-		total = 0
-		# fname = []
-		for index,val in enumerate(file_name):
-			for row in (db_search):
-				if val in row[-2]:
-					list_.append(link[index])
-					# print("list--->",link[index])
-					# fname.append(val)
-					# print("Fname-->",val)
-
+		if sort == 1:
+			list_ = list_[::-1]
+			file_name = file_name[::-1]
+			db_search = db_search[::-1]
+					
 		return db_search,value,list_,name,file_name,total,count
 
+# @user.route('/Search/<string:page>/<int:sort>')
+def Search(page,sort):
 
+
+	db_search,value,list_,name,file_name,total,count = search(page,"",sort)
+	if page == "user":
+		page = "user2"
+	return render_template(f'{page}.html', db_search = enumerate(db_search),value=value,list_=list_,name=name,filename=file_name,total=total,count=count)
+	
 
 
 def path_finder():
@@ -189,24 +208,48 @@ def success():
 			#print (db_search)
 			value = {
 			0:"IN STOCK",
-			1:"NOT IN STOCK"
+			1:"OUT OF STOCK"
 			}
 
 			link,file_name = path_finder()
 			list_ = []
 			fname = []
 
+			# for i in file_name:
+			# 	s = i.split('.jpg')
+			# 	try:
+			# 		fname.append(int(s[0]))
+			# 	except :
+			# 		pass
+			# # fname.sort()
+			# temp = []
+			# for i in db_search:
+			# 	temp.append(i[5])
 
+
+			# print("Before sorting(link)--->",link)
+			# print("Before sorting(file_name)--->",file_name)
+			#file_name.sort()
+			#fname.sort()
+			# DO NOT TOUCH
+			#fname.sort()
 			link = sorted(link, key = lambda x: file_name[link.index(x)])
 			file_name.sort()
-			# DO NOT TOUCH
+			# link = sorted(file_name, key = lambda x: fname[file_name.index(x)])
+			# fname.sort()
+
+			# print("After sorting(link)--->",link)
+			# print("After sorting(file_name)--->",file_name)
+
+			print("USER---->",db_search)
+			print("\nFilename--->",file_name)
 			total = 0
 			for index,val in enumerate(file_name):
 				for row in (db_search):
 					if val in row[-2]:
 						list_.append(link[index])
 						print("list--->",link[index])
-						fname.append(val)
+						#fname.append(val)
 						print("Fname-->",val)
 
 
@@ -218,7 +261,7 @@ def success():
 			# 			#print(link[index])
 			# 			fname.append(val)
 
-			return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,filename=fname,name=session["name"].lower())
+			return render_template('user2.html', db_search = enumerate(db_search),value=value,list_=list_,filename=file_name,name=session["name"].lower())
 		#except Exception as e:
 			# print(e)
 			# app.logger.info(f"Exception occured while encountering search :{request.url,e}")
@@ -251,7 +294,7 @@ def rentitems():
 	val = (email,item_name,price,item_type,image,0)
 	mycursor.execute(sql, val)
 	mydb.commit()
-	flash("You have successfully Inserted The Details!")
+	flash("You have successfully Inserted The Details!",category="success")
 	return redirect("/user")
 
 @user.route('cart/<string:seller_email>/<string:item_name>/<string:image>')
@@ -302,7 +345,7 @@ def sell1():
 	item_name = request.form["item"]
 	price = request.form["price"]
 	file = request.files['sellitem'] # name
-	description=request.form['description']
+	#description=request.form['description']
 	#print(file)
 	insert_success,image = insert_image(file)
 	if not insert_success:
@@ -320,13 +363,16 @@ def sell1():
 
 @user.route('/order/<string:seller_email>/<string:item_name>/<string:item_type>')
 def ord(seller_email,item_name,item_type):
-	order(seller_email,item_name,"item_type")
-	return('Ordered! Please check your mail')
+	if "name" in session:
+		stat = order(seller_email,item_name,"item_type")
+		if stat == 1:
+			flash('Ordered! Please check your mail',category="success")
+		return redirect('/')
+	else:
+		flash("Please Sign-in to Continue")
+		return redirect("/login")
 
 
-@user.route('/test')
-def test():
-	return render_template("user2.html",name="LOGIN")
 
 # @user.route('/product')
 # def product():
@@ -338,7 +384,7 @@ def product(id):
 		sql = """select * from items where item_id = %s;"""
 		mycursor.execute(sql,(int(id),))
 		db_search = mycursor.fetchone()
-		print(db_search)
+		print("PRODUCT--->",db_search)
 		stock = {
 		0 : "In stock",
 		1 : "Sold"
@@ -349,7 +395,11 @@ def product(id):
 			if file == db_search[-2]:
 				img = link[i]
 				break
-		return render_template('product.html',database=db_search,stock=stock,img=img)
+		if "name" not in session:
+			name = "LOGIN"
+		else:
+			name = session["name"]
+		return render_template('product.html',database=db_search,stock=stock,img=img,name=name)
 	# except Exception as e :
 	# 	#print("ERRORR")
 	# 	return redirect('/somethingwentwrong')
@@ -376,13 +426,14 @@ def trial():
 @user.route('/wishlist',methods=['POST'])
 def liked():
 	if "name" in session:
-		sql = f""" select wishlist.product_email,wishlist.item_name,items.price,wishlist.cart_holder,wishlist.img,wishlist.item_id from wishlist join items on wishlist.img = items.img and wishlist.cart_holder = '{session['email']}' order by wishlist.img;"""
+		sql = f""" select wishlist.product_email,wishlist.item_name,items.price,wishlist.cart_holder,wishlist.img,items.sold,items.item_id,wishlist.item_id from wishlist join items on wishlist.img = items.img and wishlist.cart_holder = '{session['email']}' order by wishlist.img;"""
+		# sql = f""" select wishlist.product_email,wishlist.item_name,items.price,wishlist.cart_holder,wishlist.img,wishlist.item_id from wishlist join items on wishlist.img = items.img and wishlist.cart_holder = '{session['email']}' order by wishlist.img;"""
 		mycursor.execute(sql)
 		db_search = mycursor.fetchall()
 		#print (db_search)
 		value = {
 				0:"IN STOCK",
-				1:"NOT IN STOCK"
+				1:"OUT OF STOCK"
 				}
 
 		link,file_name = path_finder()
@@ -399,7 +450,7 @@ def liked():
 		total = 0
 		for index,val in enumerate(file_name):
 			for row in (db_search):
-				if val in row[-2]:
+				if val in row[4]:
 					list_.append(link[index])
 					print("list--->",link[index])
 					fname.append(val)
@@ -441,7 +492,7 @@ def myorders():
 		#print (db_search)
 		value = {
 				0:"IN STOCK",
-				1:"NOT IN STOCK"
+				1:"OUT OF STOCK"
 				}
 
 		link,file_name = path_finder()
@@ -488,13 +539,13 @@ def mycart():
 		flash("Please Sign-in",category="danger")
 		return redirect('/login')
 	else:
-		sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
+		sql = f""" select cart.product_email,cart.item_name,items.price,cart.cart_holder,cart.img,items.sold,items.item_id,cart.item_id from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
 		mycursor.execute(sql)
 		db_search = mycursor.fetchall()
 		#print (db_search)
 		value = {
 				0:"IN STOCK",
-				1:"NOT IN STOCK"
+				1:"OUT OF STOCK"
 				}
 
 		link,file_name = path_finder()
@@ -511,7 +562,7 @@ def mycart():
 		total = 0
 		for index,val in enumerate(file_name):
 			for row in (db_search):
-				if val in row[-2]:
+				if val in row[4]: #
 					list_.append(link[index])
 					print("list--->",link[index])
 					fname.append(val)
@@ -523,12 +574,12 @@ def mycart():
 		sql = f""" select count(*) from cart join items on cart.img = items.img and cart.cart_holder = '{session['email']}' order by cart.img;"""
 		mycursor.execute(sql)
 		count = int(mycursor.fetchone()[0])
-		return render_template('cart.html', db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count,name=session["name"])
+		return render_template('cart.html', value=value,db_search = enumerate(db_search),list_=list_,file_name=file_name,total=total,count=count,name=session["name"])
 			
 
 @user.route('/emptyCart',methods=['POST'])
 def emptyCart():
-	sql = """truncate cart;"""
+	sql = f"""delete  from cart where cart_holder = '{session["email"]}';"""
 	mycursor.execute(sql)
 	mydb.commit()
 	return redirect('/user/mycart')

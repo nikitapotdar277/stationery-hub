@@ -74,11 +74,17 @@
                     <tr>
                         <td class="col-sm-8 col-md-6">
                         <div class="media">
-                            <a class="thumbnail pull-left" href="{{url_for('success.product', id=row[0])}}"> <img class="media-object" src="/{{list_[i]}}" style="width: 72px; height: 72px;"></a>
+         <!--  <ITEM ID>  -->                 <a class="thumbnail pull-left" href="{{url_for('success.product', id=row[6])}}">
+                                <img class="media-object" src="/{{list_[i]}}" style="width: 72px; height: 72px;"></a>
                             <div class="media-body">
                                 <h4 class="media-heading"> {{row[1]}}</h4>
                                 <h5 class="media-heading"> by {{row[0]}}</h5>
-                                <span>Status: </span><span class="text-success"><strong>In Stock</strong></span>
+                                {%if row[5] == (1) %}
+         <!--  <ITEMS SOLD>  -->                     <span>Status: </span><span class="text-danger"><strong>{{value[row[5]]}}</strong>
+                                {%else%}
+                                <span>Status: </span><span class="text-success"><strong>{{value[row[5]]}}</strong>
+                                {%endif%}
+                               <!--  <span>Status: </span><span class="text-success"><strong>{{value[row[-2]]}}</strong></span> -->
                             </div>
                         </div></td>
                         <td class="col-sm-1 col-md-1" style="text-align: center">
@@ -89,7 +95,7 @@
                         <td class="col-sm-1 col-md-1 text-center"><strong>&#x20B9;{{row[2]}}
                          </strong></td>
                         <td class="col-sm-1 col-md-1">
-                        <form action="{{url_for('success.CartD',id=row[-1])}}" method="POST">
+           <!--  <CART ID>   -->          <form action="{{url_for('success.CartD',id=row[7])}}" method="POST">
                             <button class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove
                         </td></button>
                         </form>

@@ -28,7 +28,7 @@
 	<ul>
 		<li><a href="/user/mycart"><i class="fa fa-shopping-cart" aria-hidden="true"></i>Cart</a></li>
 		<li><a href="/register">Sign Up</a></li>
-		<li><a href="/login">Log In</a></li>
+		<li><a href="/login">{{name}}</a></li>
 	</ul>	
 	</div>
 </div>
@@ -59,7 +59,7 @@
 						</button></form>
 						<br>
 					<form action="{{url_for('success.ord', seller_email = database[1], item_name = database[2], item_type = database[-2])}}">
-						<button type="submit" class="btn btn-secondary" title=" Add to cart">BUY
+						<button type="submit" class="btn btn-secondary" title=" Buy">BUY
 							<!-- <i class="fa fa-shopping-cart"></i> -->
 						</button></form>
 					<!-- <button type="button" class="btn btn-primary">Add to Cart</button> -->

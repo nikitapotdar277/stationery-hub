@@ -55,9 +55,9 @@
 			{% for i,row in (db_search) %}
 			<div class="col-md-3">
 				<div class="product-top">
-					<a href="{{url_for('success.product', id=row[-1])}}"><img src="/{{list_[i]}}"></a>
+					<a href="{{url_for('success.product', id=row[6])}}"><img src="/{{list_[i]}}"></a>
 					<div class="overlay-right">
-						<button type="button" class="btn btn-secondary" title=" Add to cart">
+			<!-- <Add to cart not working> -->			<button type="button" class="btn btn-secondary" title=" Add to cart">
 							<i class="fa fa-shopping-cart"></i>
 						</button>
 					</div>
@@ -68,7 +68,7 @@
 					<i class="fa fa-star"></i>
 					<i class="fa fa-star"></i>
 					<i class="fa fa-star-half-o"></i>
-					<h3>{{row[1]}}</h3>
+					<h3>{{row[1]}}</h3> <!-- <item name> -->
 					<h5>&#x20B9; {{row[2]}}</h5>
 
 				</div>
